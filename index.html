@@ -7,17 +7,17 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Space Mining Tycoon — V5.0</title>
+  <title>Space Mining Tycoon — V5.3</title>
   <link rel="icon" href="favicon.svg?v=5.0" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=5.2">
+  <link rel="stylesheet" href="style.css?v=5.3">
 </head>
 <body>
   <div id="app">
     <header class="topbar">
       <button class="brand" data-nav="control">
         <span class="brand-mark">◉</span>
-        <span><b>SPACE MINING</b><small>TYCOON // V5.0</small></span>
+        <span><b>SPACE MINING</b><small>TYCOON // V5.3</small></span>
       </button>
       <div class="top-stats">
         <span>CRÉDITS <b id="money">0</b></span>
@@ -129,6 +129,23 @@
               <div class="sync-card"><span class="sync-icon">☁</span><div><strong id="syncCardTitle">Sauvegarde cloud</strong><p id="cloudStatus" aria-live="polite">Préparation de la synchronisation…</p><small id="syncLast">Dernière sauvegarde : en attente</small></div></div>
               <button id="forceSync" class="primary wide">SYNCHRONISER MA PARTIE</button>
               <button id="logoutAccount" class="secondary wide">SE DÉCONNECTER</button>
+              <section id="adminPanel" class="panel admin-panel" hidden>
+                <div class="panel-title"><span>🛡</span><b>CONSOLE ADMINISTRATEUR</b><span class="admin-tag">PRIVÉ</span></div>
+                <p class="hint">Compte autorisé : oj dshfihjgsdsdklfhsdjhf@gmail.com. Les actions modifient ta sauvegarde de jeu.</p>
+                <label class="field-label" for="adminAmount">Montant de crédits</label>
+                <input id="adminAmount" type="text" inputmode="decimal" value="1000000000" placeholder="Ex. 1e100">
+                <div class="admin-actions">
+                  <button class="primary" data-admin-action="add-money">+ Ajouter crédits</button>
+                  <button class="secondary" data-admin-action="remove-money">− Retirer crédits</button>
+                  <button class="secondary" data-admin-action="set-money">Définir le solde</button>
+                  <button class="secondary" data-admin-action="add-points">+ 100 points d'ascension</button>
+                  <button class="secondary" data-admin-action="add-prestige">+ 1 ascension</button>
+                  <button class="secondary" data-admin-action="unlock-galaxies">Débloquer les 3 galaxies</button>
+                  <button class="secondary" data-admin-action="unlock-planets">Débloquer toutes les planètes</button>
+                  <button class="secondary" data-admin-action="ten-buildings">10 de chaque bâtiment partout</button>
+                </div>
+                <p class="hint" id="adminStatus" aria-live="polite">Commandes disponibles après vérification du compte.</p>
+              </section>
             </div>
           </div>
           <div class="account-side">
@@ -162,6 +179,6 @@
   </section>
   <div id="toast"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="game.js?v=5.2"></script>
+  <script src="game.js?v=5.3"></script>
 </body>
 </html>
