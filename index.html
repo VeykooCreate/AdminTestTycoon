@@ -7,17 +7,17 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Space Mining Tycoon — V4.7</title>
-  <link rel="icon" href="favicon.svg?v=4.7" type="image/svg+xml">
+  <title>Space Mining Tycoon — V5.0</title>
+  <link rel="icon" href="favicon.svg?v=5.0" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=4.7">
+  <link rel="stylesheet" href="style.css?v=5.0">
 </head>
 <body>
   <div id="app">
     <header class="topbar">
       <button class="brand" data-nav="control">
         <span class="brand-mark">◉</span>
-        <span><b>SPACE MINING</b><small>TYCOON // V4.7</small></span>
+        <span><b>SPACE MINING</b><small>TYCOON // V5.0</small></span>
       </button>
       <div class="top-stats">
         <span>CRÉDITS <b id="money">0</b></span>
@@ -95,7 +95,7 @@
           <div class="prestige-ring"><b id="prestigeBig">P0</b><span>niveau</span></div>
           <p id="prestigeText">Développe ton empire avant de franchir le seuil d'ascension.</p>
           <div class="prestige-stats"><span>RUN <b id="runTotal">0</b></span><span>OBJECTIF <b id="prestigeTarget">0</b></span></div>
-          <button id="prestigeBtn" class="primary wide" disabled>ASCENSIONNER</button>
+          <div id="ascensionRequirement" class="ascension-requirements"></div><p id="ascensionReward" class="hint"></p><div id="ascensionUpgrades" class="ascension-upgrades"></div><button id="prestigeBtn" class="primary wide" disabled>ASCENSIONNER</button>
         </div>
       </section>
 
