@@ -368,6 +368,10 @@ function renderBuildings(){
 }
 function renderMap(){
  const box=document.getElementById('galaxyMap');const selector=document.getElementById('galaxySelector');if(!box||!selector)return;
+ // Force le sélecteur comme frère direct de la carte, avant elle. Cela répare aussi
+ // les anciennes versions de index.html où le sélecteur était imbriqué dans la carte.
+ if(selector.parentElement!==box.parentElement || selector.nextElementSibling!==box){box.parentElement.insertBefore(selector,box);}
+ selector.style.position='relative';selector.style.display='grid';selector.style.width='100%';selector.style.inset='auto';
  let g=Math.floor(selectedWorld/32);if(g>=state.galaxiesUnlocked){g=Math.max(0,state.galaxiesUnlocked-1);selectedWorld=g*32;}const start=g*32;
  selector.innerHTML=GALAXIES.map((gal,i)=>`<button class="galaxy-card ${i===g?'active':''} ${i<state.galaxiesUnlocked?'available':'locked'}" data-galaxy="${i}" ${i>=state.galaxiesUnlocked?'disabled':''}><span>${gal.icon}</span><b>${gal.name}</b><small>${i<state.galaxiesUnlocked?'DÉBLOQUÉE':'🔒 Requiert '+(i===1?'une première ascension':'deux ascensions')}</small><em>${WORLDS.slice(i*32,i*32+32).filter((_,j)=>worldUnlocked(i*32+j)).length}/32 planètes</em></button>`).join('');
  box.innerHTML=`<div class="map-grid-lines"></div><div class="galaxy-core">${GALAXIES[g].icon}</div>`;
