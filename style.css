@@ -77,3 +77,6 @@
 
 /* Admin console */
 .admin-panel{margin-top:18px;padding:16px;border-color:rgba(117,220,255,.32);background:linear-gradient(135deg,rgba(11,27,43,.98),rgba(7,12,22,.98))}.admin-panel .panel-title{display:flex;align-items:center;gap:8px;margin-bottom:12px}.admin-tag{margin-left:auto;padding:4px 7px;border:1px solid rgba(117,220,255,.3);border-radius:6px;color:var(--cyan);font-size:8px;letter-spacing:1px}.admin-panel input{display:block;width:100%;min-height:42px;padding:0 12px;border:1px solid rgba(127,165,200,.25);border-radius:9px;background:#050a12;color:var(--text)}.admin-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.admin-actions button{min-height:38px;padding:8px;font-size:9px}@media(max-width:500px){.admin-actions{grid-template-columns:1fr}}
+
+/* La règle display:flex de la navigation ne doit jamais annuler hidden. */
+#adminNavButton[hidden] { display: none !important; }

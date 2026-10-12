@@ -1,4 +1,4 @@
-SPACE MINING TYCOON V5 — GALAXIES ET ASCENSIONS
+SPACE MINING TYCOON V5.5 — GALAXIES ET ASCENSIONS
 
 1. Fais une copie de sécurité du dépôt actuel.
 2. Teste cette version dans un dépôt GitHub Pages séparé.
@@ -9,4 +9,4 @@ SPACE MINING TYCOON V5 — GALAXIES ET ASCENSIONS
 La clé de sauvegarde locale est conservée pour permettre la migration des anciennes sauvegardes. Cette version n'a pas été testée contre ton projet Supabase distant.
 
 
-V5.4 : le bouton Admin apparaît dans la navigation après connexion vérifiée avec le compte autorisé. Le pseudo exact ADMIN est filtré du classement affiché par le client. Pour une exclusion garantie côté serveur, il faut aussi adapter la vue/table Supabase du classement.
+V5.5 : le bouton Admin apparaît dans la navigation après connexion vérifiée avec le compte autorisé. Le pseudo exact ADMIN est filtré du classement affiché par le client. Pour une exclusion garantie côté serveur, il faut aussi adapter la vue/table Supabase du classement.

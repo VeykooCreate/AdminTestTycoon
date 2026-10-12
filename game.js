@@ -59,11 +59,26 @@ const PLANET_PREFIX=[
  'matricielle','titanique','éternelle','infinie','mégastructurée','omniverselle','intergalactique','de création'
 ];
 const ROLE_WORDS=['Extracteur','Unité minière','Raffinerie','Base orbitale','Convoi','Ancre gravitationnelle','Collecteur','Passerelle quantique','Forge','Anneau','Usine de matière noire','Noyau'];
+const PLANET_BUILDING_FAMILIES=[
+ ['Récupérateur','Foreuse','Raffinerie','Station','Vaisseau','Ancre','Collecteur','Portail','Forge','Anneau','Synthétiseur','Réacteur'],
+ ['Mineur','Excavateur','Purificateur','Dôme','Transporteur','Stabilisateur','Extracteur','Relais','Fonderie','Couronne','Convertisseur','Cœur'],
+ ['Dragueur','Perceur','Cristalliseur','Citadelle','Croiseur','Puits','Moissonneur','Passerelle','Atelier','Halo','Distillateur','Noyau'],
+ ['Sonde','Laser','Condensateur','Habitat','Flotte','Balise','Récolteur','Vortex','Imprimante','Orbiteur','Transmuteur','Générateur'],
+ ['Foreuse','Découpeur','Séparateur','Avant-poste','Cargo','Pylône','Pompe','Téléporteur','Creuset','Satellite','Alchimiseur','Singularité'],
+ ['Prospecteur','Fracasseur','Catalyseur','Forteresse','Intercepteur','Pilier','Aspireur','Conduit','Fondeur','Couronne','Réplicateur','Moteur'],
+ ['Extracteur','Tunnelier','Liquéfacteur','Colonie','Navette','Monolithe','Capteur','Rift','Fabrique','Sphère','Transformateur','Réacteur'],
+ ['Récolteur','Foreuse quantique','Épurateur','Complexe','Arche','Totem','Pompe gravitationnelle','Pont stellaire','Forge quantique','Anneau','Usine','Nexus']
+];
+const PLANET_BUILDING_MODIFIERS=['prismatique','volcanique','cryogénique','spectral','quantique','abyssal','ionique','cristallin'];
 function buildingSet(w){
- const g=Math.floor(w/32),local=w%32;
- if(g>0)return GALAXY_BUILDINGS[g].map(r=>[`${r[1]} · ${WORLDS[w][1]}`,r[2]]);
- const theme=PLANET_THEMES[local],prefix=PLANET_PREFIX[local];
- return BUILDING_ROLES.map(r=>[`${r[1]} ${theme} ${prefix}`.replace(/  /g,' '),r[2]]);
+ const local=w%32, world=WORLDS[w], family=PLANET_BUILDING_FAMILIES[Math.floor(local/4)%PLANET_BUILDING_FAMILIES.length];
+ const modifier=PLANET_BUILDING_MODIFIERS[Math.floor(local/4)%PLANET_BUILDING_MODIFIERS.length];
+ return BUILDING_ROLES.map((r,b)=>{
+   const noun=family[(b+local)%family.length];
+   const label=`${noun} ${modifier} de ${world[1]}`;
+   const icon=(GALAXY_BUILDINGS[Math.floor(w/32)]||GALAXY_BUILDINGS[0])[b]?.[2]||r[2];
+   return [label,icon];
+ });
 }
 
 const BRANCHES={
