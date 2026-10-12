@@ -21,6 +21,7 @@ const WORLDS=[
  ['♾️','Nexus Infini',5e90,20000],['🪩','Mégasphère',2e94,28000],['🛸','Frontière Omniverselle',1e98,40000],
  ['🌌','Mer des Univers',5e101,56000],['✨','Trône de la Création',1e105,80000]
 ];
+
 const MINE_ACCENTS=[[99,199,255],[255,112,84],[230,190,112],[81,213,255],[174,125,255],[255,196,79],[159,126,255],[71,191,217],[107,230,219],[158,205,246],[218,119,255],[123,174,255],[255,137,102],[167,112,231],[255,218,108],[120,184,255],[255,111,66],[149,137,202],[111,151,255],[130,199,255],[99,221,255],[183,204,255],[255,132,201],[179,236,255],[105,223,185],[187,169,255],[255,156,103],[128,255,220],[255,151,217],[145,201,255],[97,204,242],[255,224,145]];
 let renderedMineWorld=-1;
 function updateMinePlanetTheme(){if(renderedMineWorld===selectedWorld)return;renderedMineWorld=selectedWorld;const rgb=MINE_ACCENTS[selectedWorld]||MINE_ACCENTS[0],button=document.getElementById('mineBtn'),planet=document.getElementById('planetHero');if(button){button.style.setProperty('--mine-rgb',rgb.join(','));button.dataset.world=String(selectedWorld);button.setAttribute('aria-label','Extraire des crédits sur '+WORLDS[selectedWorld][1])}if(planet)planet.textContent=WORLDS[selectedWorld][0]}
@@ -30,6 +31,23 @@ const BUILDING_ROLES=[
  ['cargo','Flotte cargo','🚚'],['gravite','Extracteur gravitationnel','🧲'],['energie','Collecteur énergétique','☀️'],['portail','Portail quantique','🌀'],
  ['forge','Forge avancée','⚛️'],['anneau','Anneau de singularité','💫'],['matiere','Usine de matière noire','🌑'],['noyau','Noyau d’assemblage','🔮']
 ];
+const GALAXIES=[
+ {name:'Voie stellaire',icon:'🌌',theme:'stellar',description:'La galaxie originelle, berceau de la colonisation.',unlock:0,scale:1},
+ {name:'Nébuleuse ardente',icon:'🔥',theme:'inferno',description:'Une galaxie brûlante alimentée par le plasma et les étoiles mourantes.',unlock:1,scale:1e50},
+ {name:'Dimension abyssale',icon:'🕳️',theme:'abyss',description:'Une dimension instable où la matière et le temps se déforment.',unlock:2,scale:1e100}
+];
+const EXTRA_WORLDS=[
+ [['🔥','Fournaise d’Ignis'],['🌋','Caldeira Rouge'],['🧡','Cendre d’Or'],['☀️','Couronne Incandescente'],['🪨','Basalte Vivant'],['🌞','Héliosphère'],['🩸','Mer de Magma'],['💥','Nova Carmine'],['🔶','Prisme Solaire'],['🌡️','Noyau Brûlant'],['🌟','Géante Rubis'],['🔥','Forge des Anciens'],['🟠','Dune Pyrique'],['🌋','Volcan Éternel'],['☄️','Comète de Braise'],['🧨','Cratère Royal'],['🟡','Soleil Fracturé'],['🧱','Monolithe de Scorie'],['💫','Pulsar Vermillon'],['🌠','Pluie de Cendres'],['🛡️','Bouclier Solaire'],['🟤','Planète de Cuivre'],['🔴','Sang Stellaire'],['🪐','Anneau de Feu'],['🧿','Œil de Rubis'],['🌅','Aube Infernale'],['🟧','Citadelle Ambrée'],['🌋','Trône Magmatique'],['⚡','Orage de Plasma'],['🌞','Cœur de Fournaise'],['🔥','Flamme Primordiale'],['👑','Imperium Ignis']],
+ [['🕳️','Puits du Néant'],['🟣','Voile Spectral'],['🧬','Matrice Instable'],['🌀','Faille d’Inversion'],['👁️','Œil Paradoxal'],['🌑','Éclipse Absolue'],['🟢','Marais Quantique'],['💠','Cristal d’Antimatière'],['🪞','Miroir du Temps'],['🧿','Sanctuaire du Vide'],['🌌','Mer d’Ombres'],['♾️','Boucle Éternelle'],['⚫','Singularité Noire'],['🪐','Monde à l’Envers'],['🔮','Orbe Inconnu'],['🧪','Laboratoire du Chaos'],['🌫️','Brume Vivante'],['💜','Nébuleuse Fantôme'],['🧊','Glace Temporelle'],['🦠','Essaim Cosmique'],['🧿','Prison des Dieux'],['🌠','Cicatrice Stellaire'],['🪬','Temple Paradoxal'],['🌀','Spirale Infinie'],['⚛️','Atome Universel'],['🕸️','Réseau Dimensionnel'],['🌒','Lune de l’Oubli'],['🔻','Obélisque du Chaos'],['🌌','Frontière du Réel'],['💀','Tombe des Étoiles'],['♾️','Abîme Sans Fin'],['👁️','Origine du Tout']]
+];
+const GALAXY_BUILDINGS=[
+ BUILDING_ROLES,
+ [['extracteur','Condenseur de plasma','🔥'],['mineur','Foreuse de magma','🌋'],['raffinerie','Fonderie solaire','☀️'],['station','Observatoire coronale','🔭'],['cargo','Convoi de braises','🚀'],['gravite','Ancre gravitationnelle','🧲'],['energie','Convertisseur thermique','🌡️'],['portail','Passage pyrique','🌀'],['forge','Forge d’étoile','⚒️'],['anneau','Couronne de fusion','💍'],['matiere','Cristalliseur rubis','🔶'],['noyau','Cœur ignitique','❤️‍🔥']],
+ [['extracteur','Moissonneur de vide','🕳️'],['mineur','Sonde paradoxale','🧿'],['raffinerie','Tisseur de matière','🧬'],['station','Archive temporelle','⌛'],['cargo','Arche dimensionnelle','🚪'],['gravite','Puits de singularité','⚫'],['energie','Réacteur d’antimatière','💠'],['portail','Passerelle fractale','🌀'],['forge','Forge de causalité','⚛️'],['anneau','Anneau d’éternité','♾️'],['matiere','Incubateur d’ombre','🌑'],['noyau','Moteur d’univers','🌌']]
+];
+for(let g=1;g<3;g++)EXTRA_WORLDS[g-1].forEach((p,i)=>WORLDS.push([p[0],p[1],WORLDS[g*32-1][2]*Math.pow(1e50,g),WORLDS[i][3]*Math.pow(10,g)]));
+
+
 const PLANET_THEMES=[
  'Nova','Martienne','Saturnienne','Azur','Singulière','Hélios','Dimensionnelle','Néxienne','Cristalline','Oortienne','Oméga','Universelle',
  'Vesperienne','Éclipse','Aethérienne','Cristallienne','Stellaire','Primordiale','Némésienne','Titanienne','Orageuse','Spectrale','Pulsar','Cométaire',
@@ -42,8 +60,10 @@ const PLANET_PREFIX=[
 ];
 const ROLE_WORDS=['Extracteur','Unité minière','Raffinerie','Base orbitale','Convoi','Ancre gravitationnelle','Collecteur','Passerelle quantique','Forge','Anneau','Usine de matière noire','Noyau'];
 function buildingSet(w){
- const theme=PLANET_THEMES[w], prefix=PLANET_PREFIX[w];
- return BUILDING_ROLES.map((r,i)=>[`${r[1]} ${theme} ${prefix}`.replace(/  /g,' '),r[2]]);
+ const g=Math.floor(w/32),local=w%32;
+ if(g>0)return GALAXY_BUILDINGS[g].map(r=>[`${r[1]} · ${WORLDS[w][1]}`,r[2]]);
+ const theme=PLANET_THEMES[local],prefix=PLANET_PREFIX[local];
+ return BUILDING_ROLES.map(r=>[`${r[1]} ${theme} ${prefix}`.replace(/  /g,' '),r[2]]);
 }
 
 const BRANCHES={
@@ -241,6 +261,7 @@ function checkAchievements(){
 
 let state=load();
 let selectedWorld=Math.max(0,Math.min(WORLDS.length-1,Number(localStorage.getItem('sm-v2-world')??state.activeWorld??0)));
+if(Math.floor(selectedWorld/32)>=(state.galaxiesUnlocked||1))selectedWorld=Math.max(0,((state.galaxiesUnlocked||1)-1)*32);
 state.activeWorld=selectedWorld;
 let screen='control';let missionTab='daily';let accountBusy=false;
 const ACCOUNT_CREATED_KEY='space-mining-account-created';
@@ -252,7 +273,7 @@ function dismissAccountReminder(){accountReminderDismissed=true;closeAccountRemi
 
 function fresh(){
  const buildings={};WORLDS.forEach((_,w)=>BUILDING_ROLES.forEach((_,b)=>buildings[w+'-'+b]=0));
- return {money:0,runTotal:0,lifetimeTotal:0,prestige:0,crystals:0,buildings,research:{},xp:0,level:1,clicks:0,spent:0,activeWorld:0,
+ return {money:0,runTotal:0,lifetimeTotal:0,prestige:0,crystals:0,ascensionPoints:0,galaxiesUnlocked:1,ascensionUpgrades:{},buildings,research:{},xp:0,level:1,clicks:0,spent:0,activeWorld:0,
 daily:{key:dateKey(),claimed:[],base:{clicks:0,lifetime:0,spent:0,buildings:0}},
 weekly:{key:weekKey(),claimed:[],base:{clicks:0,lifetime:0,run:0,spent:0,buildings:0,tech:0,world:1}},
 campaignClaimed:[],
@@ -262,7 +283,7 @@ offlineLast:0,lastAt:Date.now(),account:null,lastAccountUserId:null,seenWorlds:[
 }
 function migrate(z){
  const base=fresh();z=Object.assign(base,z||{});z.buildings=Object.assign({},base.buildings,z.buildings||{});z.research=z.research||{};z.daily=z.daily||base.daily;z.weekly=z.weekly||base.weekly;const weeklyHasBase=!!(z.weekly&&z.weekly.base&&typeof z.weekly.base==='object');z.weekly.base=Object.assign({},base.weekly.base,z.weekly.base||{});
- z.prestige=Number(z.prestige)||0;z.lifetimeTotal=Number(z.lifetimeTotal)||0;z.runTotal=Number(z.runTotal)||z.money||0;z.money=Math.max(0,Number(z.money)||0);z.clicks=Number(z.clicks||z.cLICKS)||0;z.spent=Number(z.spent)||0;
+ z.prestige=Number(z.prestige)||0;z.ascensionPoints=Math.max(0,Number(z.ascensionPoints)||0);z.galaxiesUnlocked=Math.max(1,Math.min(3,Math.max(Number(z.galaxiesUnlocked)||1,Math.min(3,(Number(z.prestige)||0)+1))));z.ascensionUpgrades=z.ascensionUpgrades||{};z.lifetimeTotal=Number(z.lifetimeTotal)||0;z.runTotal=Number(z.runTotal)||z.money||0;z.money=Math.max(0,Number(z.money)||0);z.clicks=Number(z.clicks||z.cLICKS)||0;z.spent=Number(z.spent)||0;
 z.campaignClaimed=Array.isArray(z.campaignClaimed)?z.campaignClaimed:[];
 z.achievements=Array.isArray(z.achievements)?z.achievements:[];
 z.achievementClaimed=Array.isArray(z.achievementClaimed)?z.achievementClaimed:[...z.achievements];
@@ -290,24 +311,28 @@ function fmt(n){if(!Number.isFinite(n))return '∞';n=Math.max(0,n);if(n<1000)re
 function dateKey(){return new Date().toISOString().slice(0,10)}
 function weekKey(){const d=new Date();const day=d.getDay()||7;d.setHours(0,0,0,0);d.setDate(d.getDate()-day+1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function totalBuildings(){return Object.values(state.buildings).reduce((a,b)=>a+Number(b||0),0)}
-function worldUnlocked(w){return w===0||BUILDING_ROLES.every((_,b)=>(state.buildings[(w-1)+'-'+b]||0)>=1)}
+function worldUnlocked(w){
+ const g=Math.floor(w/32),local=w%32;
+ if(g>=state.galaxiesUnlocked)return false;
+ if(local===0)return true;
+ return BUILDING_ROLES.every((_,b)=>(state.buildings[(w-1)+'-'+b]||0)>=1);
+}
 function worldProgress(w){return BUILDING_ROLES.reduce((a,_,b)=>a+(state.buildings[w+'-'+b]||0),0)}
-function worldFactor(w){const p=Math.min(1,worldProgress(w)/(BUILDING_ROLES.length*20));return 1+w*.22+p*(0.6+w*.06)}
+function worldFactor(w){const local=w%32,p=Math.min(1,worldProgress(w)/(BUILDING_ROLES.length*20));return 1+local*.22+p*(0.6+local*.06)+(Number(state.ascensionUpgrades?.exploration)||0)*.08}
 function cost(w,b){
- const n=state.buildings[w+'-'+b]||0;
- // V2.5 : seuls les 4 premiers bâtiments du premier secteur ont un équilibrage spécial.
- if(w===0 && b<4){const bases=[1500,6000,24000,96000];return 6*Math.ceil(bases[b]*Math.pow(1.16,n)*eventMult('cost'));}
+ const n=state.buildings[w+'-'+b]||0,galaxy=Math.floor(w/32),local=w%32;
+ if(galaxy===0&&local===0&&b<4){const bases=[1500,6000,24000,96000];return 6*Math.ceil(bases[b]*Math.pow(1.16,n)*eventMult('cost'));}
  const planetInflation=Math.pow(worldFactor(w),1.15);
- return 18*Math.ceil((500*Math.pow(28,w)*Math.pow(5.5,b)*Math.pow(1.16,n))*planetInflation/5*eventMult('cost'));
+ return 18*Math.ceil((500*Math.pow(28,local)*Math.pow(5.5,b)*Math.pow(1.16,n))*planetInflation/5*GALAXIES[galaxy].scale*eventMult('cost')*Math.pow(.95,Number(state.ascensionUpgrades?.discount)||0));
 }
 function prestigeMult(){return 1+.18*state.prestige}
 function techOwned(id){return !!state.research[id]}
-function prodMult(){let m=1+state.prestige*.18;for(const br of BRANCH_ORDER)BRANCHES[br].forEach(t=>{if(techOwned(t[0])&&['automation','energy'].includes(br))m*=br==='automation'?1.25:1.2});return m}
-function clickPower(){let m=100*prestigeMult();if(techOwned('laser'))m*=1.5;if(techOwned('plasma'))m*=1.8;if(techOwned('abyss'))m*=2;if(techOwned('stellar'))m*=3;if(techOwned('voidmine'))m*=5;return m*eventMult('click')*eventMult('income')}
+function prodMult(){let m=(1+state.prestige*.18)*(1+.25*(Number(state.ascensionUpgrades?.production)||0));for(const br of BRANCH_ORDER)BRANCHES[br].forEach(t=>{if(techOwned(t[0])&&['automation','energy'].includes(br))m*=br==='automation'?1.25:1.2});return m}
+function clickPower(){let m=100*prestigeMult()*(1+.25*(Number(state.ascensionUpgrades?.click)||0));if(techOwned('laser'))m*=1.5;if(techOwned('plasma'))m*=1.8;if(techOwned('abyss'))m*=2;if(techOwned('stellar'))m*=3;if(techOwned('voidmine'))m*=5;return m*eventMult('click')*eventMult('income')}
 function baseProd(w,b){
- // V2.5 : économie V2.3 inchangée partout sauf les 4 premiers bâtiments du premier secteur.
- if(w===0 && b<4){return [20,75,280,1050][b];}
- return 1000*(1.1+.18*w)*Math.pow(3.2,w)*Math.pow(2,b)*Math.max(1,2-b*.08)*(w>=12?Math.pow(1.16,w-11):1);
+ const galaxy=Math.floor(w/32),local=w%32;
+ if(galaxy===0&&local===0&&b<4)return [20,75,280,1050][b];
+ return 1000*(1.1+.18*local)*Math.pow(3.2,local)*Math.pow(2,b)*Math.max(1,2-b*.08)*(local>=12?Math.pow(1.16,local-11):1)*GALAXIES[galaxy].scale;
 }
 function autoRate(){let r=0;WORLDS.forEach((_,w)=>BUILDING_ROLES.forEach((__,b)=>r+=(state.buildings[w+'-'+b]||0)*baseProd(w,b)*WORLDS[w][3]));return r*prestigeMult()*prodMult()*3*eventMult('prod')*eventMult('income')/3*75}
 function earn(x){if(!Number.isFinite(x)||x<=0)return;state.money+=x;state.runTotal+=x;state.lifetimeTotal+=x;state.xp+=Math.max(1,Math.floor(Math.log10(Math.max(10,x))+2));state.level=Math.floor(Math.sqrt(state.xp/80))+1}
@@ -318,8 +343,11 @@ function hasTechAlert(){return BRANCH_ORDER.some(br=>BRANCHES[br].some((t,i)=>!t
 function hasMissionAlert(){ensureDaily();ensureWeekly();ensureMissionState();const ds=dailySet();if(ds.some((d,i)=>!state.daily.claimed.includes(i)&&dailyValue(d)>=d[2]))return true;if(CAMPAIGN.some(m=>!state.campaignClaimed.includes(m[0])&&missionValue(m)>=m[3]))return true;if(WEEKLY.some((m,i)=>!state.weekly.claimed.includes(i)&&weeklyValue(m)>=m[3]))return true;if(QUESTS.some(q=>questDone(q)))return true;return ACHIEVEMENTS.some(a=>!state.achievementClaimed.includes(a[0])&&achievementValue(a)>=a[4])}
 function acknowledgeUnlockedSectors(){if(!Array.isArray(state.seenWorlds))state.seenWorlds=[0];let changed=false;for(let i=0;i<WORLDS.length;i++)if(worldUnlocked(i)&&!state.seenWorlds.includes(i)){state.seenWorlds.push(i);changed=true}if(changed)save()}
 function hasSectorAlert(){return WORLDS.some((_,i)=>worldUnlocked(i)&&!state.seenWorlds?.includes(i))}
-function ascensionReady(){const allPlanets=BUILDING_ROLES.every((_,b)=>WORLDS.every((__,w)=>(state.buildings[w+'-'+b]||0)>=10));return allPlanets}
-function ascensionTarget(){return 1e14*Math.pow(18,state.prestige)}
+function currentGalaxy(){return Math.min(2,Math.max(0,(state.galaxiesUnlocked||1)-1))}
+function currentGalaxyWorlds(){const start=currentGalaxy()*32;return WORLDS.slice(start,start+32)}
+function ascensionReady(){const start=currentGalaxy()*32,worlds=currentGalaxyWorlds();return worlds.length===32&&worlds.every((_,i)=>worldUnlocked(start+i))&&BUILDING_ROLES.every((_,b)=>worlds.every((__,i)=>(state.buildings[(start+i)+'-'+b]||0)>=10))}
+function ascensionTarget(){return [1e60,1e110,1e160][currentGalaxy()]||1e160}
+function ascensionPointReward(){return currentGalaxy()+1}
 function hasPrestigeAlert(){return ascensionReady()&&state.runTotal>=ascensionTarget()}
 function setNavAlert(id,on){const el=document.getElementById(id);if(el)el.hidden=!on}
 function renderNavAlerts(){setNavAlert('navAlertSectors',hasSectorAlert());setNavAlert('navAlertTech',hasTechAlert());setNavAlert('navAlertMissions',hasMissionAlert());setNavAlert('navAlertPrestige',hasPrestigeAlert())}
@@ -339,10 +367,14 @@ function renderBuildings(){
  const list=buildingSet(selectedWorld);box.innerHTML=`<div class="planet-building-head"><span>${w[0]}</span><div><strong>${w[1]}</strong><small>Les modèles changent selon le secteur. Les niveaux, prix et revenus de ta sauvegarde restent inchangés.</small></div><b>×${w[3]}</b></div>`+list.map((x,b)=>{const n=state.buildings[selectedWorld+'-'+b]||0,c=cost(selectedWorld,b),income=baseProd(selectedWorld,b)*w[3]*prestigeMult()*prodMult()*75*eventMult('prod')*eventMult('income');return `<article class="building"><div class="building-icon">${x[1]}</div><div class="building-info"><strong>${x[0]}</strong><small>Niveau ${n} · +${fmt(income)}/s</small><em>Prochain coût · ${fmt(c)}</em></div><button class="buy" data-buy="${b}" ${state.money<c?'disabled':''}>ACHETER</button></article>`}).join('');
 }
 function renderMap(){
- const box=document.getElementById('galaxyMap');if(!box)return;box.innerHTML='<div class="map-grid-lines"></div><div class="galaxy-core">✦</div>';
- const cols=8,rows=4;
- WORLDS.forEach((w,i)=>{const col=i%cols,row=Math.floor(i/cols);const el=document.createElement('button');el.className='sector-node '+(i===selectedWorld?'active ':'')+(worldUnlocked(i)?'':'locked');el.style.setProperty('--col',col+1);el.style.setProperty('--row',row+1);el.innerHTML=`<span>${w[0]}</span><small>${String(i+1).padStart(2,'0')} · ${w[1]}</small><em>×${w[3]}</em>`;el.onclick=()=>{if(worldUnlocked(i)){selectedWorld=i;state.activeWorld=i;if(!state.seenWorlds.includes(i))state.seenWorlds.push(i);localStorage.setItem('sm-v2-world',i);save();render()}else toast('Secteur verrouillé')};box.appendChild(el)});
- const w=WORLDS[selectedWorld];document.getElementById('sectorDetail').innerHTML=`<div class="panel-title"><b>${w[0]} ${w[1]}</b><span style="margin-left:auto">×${w[3]}</span></div><p class="hint">Secteur ${selectedWorld+1}/${WORLDS.length} · Développement ${Math.round(worldProgress(selectedWorld)/(BUILDING_ROLES.length*20)*100)}% · Indice industriel ×${worldFactor(selectedWorld).toFixed(2)} · ${worldUnlocked(selectedWorld)?'SECTEUR ACTIF':'VERROUILLÉ'}</p>`;
+ const box=document.getElementById('galaxyMap');if(!box)return;
+ let g=Math.floor(selectedWorld/32);if(g>=state.galaxiesUnlocked){g=Math.max(0,state.galaxiesUnlocked-1);selectedWorld=g*32;}const start=g*32;
+ box.innerHTML=`<div class="galaxy-selector">${GALAXIES.map((gal,i)=>`<button class="galaxy-card ${i===g?'active':''} ${i<state.galaxiesUnlocked?'available':'locked'}" data-galaxy="${i}" ${i>=state.galaxiesUnlocked?'disabled':''}><span>${gal.icon}</span><b>${gal.name}</b><small>${i<state.galaxiesUnlocked?'DÉBLOQUÉE':'🔒 Requiert '+(i===1?'une première ascension':'deux ascensions')}</small><em>${WORLDS.slice(i*32,i*32+32).filter((_,j)=>worldUnlocked(i*32+j)).length}/32 planètes</em></button>`).join('')}</div><div class="map-grid-lines"></div><div class="galaxy-core">${GALAXIES[g].icon}</div>`;
+ const cols=8;
+ WORLDS.slice(start,start+32).forEach((w,j)=>{const i=start+j,col=j%cols,row=Math.floor(j/cols);const el=document.createElement('button');el.className='sector-node '+(i===selectedWorld?'active ':'')+(worldUnlocked(i)?'':'locked');el.style.setProperty('--col',col+1);el.style.setProperty('--row',row+1);el.innerHTML=`<span>${w[0]}</span><small>${String(j+1).padStart(2,'0')} · ${w[1]}</small><em>×${w[3]}</em>`;el.onclick=()=>{if(worldUnlocked(i)){selectedWorld=i;state.activeWorld=i;if(!state.seenWorlds.includes(i))state.seenWorlds.push(i);localStorage.setItem('sm-v2-world',i);save();render()}else toast('Planète verrouillée : développe la précédente')};box.appendChild(el)});
+ const safeSelected=selectedWorld>=start&&selectedWorld<start+32?selectedWorld:start;
+ const w=WORLDS[safeSelected];
+ document.getElementById('sectorDetail').innerHTML=`<div class="panel-title"><b>${w[0]} ${w[1]}</b><span style="margin-left:auto">×${w[3]}</span></div><p class="hint">${GALAXIES[g].name} · Planète ${(safeSelected%32)+1}/32 · Développement ${Math.round(worldProgress(safeSelected)/(BUILDING_ROLES.length*20)*100)}% · Indice industriel ×${worldFactor(safeSelected).toFixed(2)} · ${worldUnlocked(safeSelected)?'PLANÈTE ACTIVE':'VERROUILLÉE'}</p>`;
 }
 function renderTech(){
  const box=document.getElementById('techTree');if(!box)return;box.innerHTML=BRANCH_ORDER.map((br,bi)=>`<section class="tech-branch"><div class="tech-branch-head"><span>${['⛏','🤖','⚡','💰','🌌'][bi]}</span><h3>${branchName(br)}</h3></div><div class="tech-chain">${BRANCHES[br].map((t,i)=>{const prev=i?BRANCHES[br][i-1][0]:null,owned=techOwned(t[0]),available=!prev||techOwned(prev);return `<div class="tech-node ${owned?'owned':''} ${available?'':'locked'}"><div class="tech-node-dot"></div><strong>${owned?'✓ ':''}${t[1]}</strong><small>${t[3]} · ${fmt(t[2])}</small><button class="${available&&!owned?'buy':'secondary'}" data-tech="${t[0]}" ${owned||!available||state.money<t[2]?'disabled':''}>${owned?'ACQUISE':available?'RECHERCHER':'VERROUILLÉE'}</button></div>`}).join('')}</div></section>`).join('');
@@ -381,7 +413,32 @@ function renderMissions(){
 }
 function missionHTML(id,title,type,need,reward,claimed,value){const done=value>=need;return `<article class="mission"><div class="mission-head"><strong>${claimed?'✓':done?'●':'○'} ${title}</strong><b>+${fmt(reward)}</b></div><small>${fmt(value)} / ${fmt(need)}</small><div class="bar"><i style="width:${Math.min(100,value/need*100)}%"></i></div><button class="${done&&!claimed?'primary':'secondary'}" data-claim="${id}" data-claim-type="${id[0]==='d'?'daily':id.startsWith('week')?'weekly':'campaign'}" ${done&&!claimed?'':'disabled'}>${claimed?'RÉCLAMÉ':done?'RÉCLAMER':'EN COURS'}</button></article>`}
 function renderDailyPreview(){const box=document.getElementById('dailyPreview');if(!box)return;ensureDaily();const ds=dailySet();box.innerHTML=ds.map((d,i)=>`<div class="daily-row"><span>${state.daily.claimed.includes(i)?'✓':'○'} ${d[1]}</span><b>+${fmt(DAILY_REWARDS[i])}</b></div>`).join('')}
-function renderPrestige(){const target=1e14*Math.pow(18,state.prestige);document.getElementById('prestigeBig').textContent='P'+state.prestige;document.getElementById('runTotal').textContent=fmt(state.runTotal);document.getElementById('prestigeTarget').textContent=fmt(target);document.getElementById('prestigeText').textContent=state.runTotal>=target?'Le seuil est atteint. Une nouvelle ascension est disponible.':'Continue à développer tes secteurs et ton empire pour atteindre le seuil.';const ready=ascensionReady();document.getElementById('prestigeBtn').disabled=!ready||state.runTotal<target;const req=document.getElementById('ascensionRequirement');if(req)req.textContent=ready?'✅ Toutes les planètes ont 10 bâtiments de chaque.':'⛏️ Requis : 10 bâtiments de CHAQUE type sur les 32 planètes.'}
+const ASCENSION_UPGRADES=[
+ {id:'production',name:'Production optimisée',icon:'⚙️',max:5,cost:1,desc:'+25% production par niveau'},
+ {id:'discount',name:'Ingénierie économique',icon:'💠',max:5,cost:1,desc:'−5% coût des bâtiments par niveau'},
+ {id:'click',name:'Laser de commandement',icon:'🔆',max:5,cost:1,desc:'+25% puissance de clic par niveau'},
+ {id:'exploration',name:'Cartographie avancée',icon:'🧭',max:5,cost:2,desc:'Indice industriel planétaire augmenté'}
+];
+function buyAscensionUpgrade(id){
+ const u=ASCENSION_UPGRADES.find(x=>x.id===id);if(!u)return;
+ const level=Number(state.ascensionUpgrades?.[id])||0;
+ if(level>=u.max){toast('Amélioration déjà au niveau maximum');return}
+ if((state.ascensionPoints||0)<u.cost){toast('Pas assez de points d’ascension');return}
+ state.ascensionPoints-=u.cost;state.ascensionUpgrades[id]=level+1;save();render();toast(u.name+' améliorée · niveau '+(level+1));
+}
+function renderPrestige(){
+ const target=ascensionTarget(),g=currentGalaxy(),start=g*32,worlds=currentGalaxyWorlds();
+ document.getElementById('prestigeBig').textContent='P'+state.prestige;
+ document.getElementById('runTotal').textContent=fmt(state.runTotal);
+ document.getElementById('prestigeTarget').textContent=fmt(target);
+ document.getElementById('prestigeText').textContent=`Galaxie active : ${GALAXIES[g].name}. Une ascension accorde ${ascensionPointReward()} point(s) permanent(s) et ${g<2?'débloque la galaxie suivante.':'renforce ta progression permanente.'}`;
+ const ready=ascensionReady(),moneyReady=state.runTotal>=target;
+ document.getElementById('prestigeBtn').disabled=!ready||!moneyReady;
+ const req=document.getElementById('ascensionRequirement');
+ if(req)req.innerHTML=`<div class="ascension-check ${worlds.every((_,i)=>worldUnlocked(start+i))?'done':''}">🪐 Planètes débloquées : ${worlds.filter((_,i)=>worldUnlocked(start+i)).length}/32</div><div class="ascension-check ${BUILDING_ROLES.every((_,b)=>worlds.every((__,i)=>(state.buildings[(start+i)+'-'+b]||0)>=10)?'done':'')}">🏗️ Bâtiments : 10 de chaque type sur les 32 planètes</div><div class="ascension-check ${moneyReady?'done':''}">💰 Argent requis : ${fmt(target)} · actuel : ${fmt(state.runTotal)}</div><div class="ascension-check">✨ Récompense : +${ascensionPointReward()} point(s) d’ascension</div><details class="ascension-missing"><summary>Voir les bâtiments manquants</summary>${worlds.map((w,i)=>{const wi=start+i,missing=BUILDING_ROLES.map((r,b)=>({name:buildingSet(wi)[b][0],n:state.buildings[wi+'-'+b]||0})).filter(x=>x.n<10);return missing.length?`<p><b>${w[1]}</b> — ${missing.map(x=>`${x.name}: ${x.n}/10`).join(', ')}</p>`:''}).join('')||'<p>Tout est construit.</p>'}</details>`;
+ const upgrades=document.getElementById('ascensionUpgrades');if(upgrades)upgrades.innerHTML=`<h3>✨ Améliorations permanentes · ${state.ascensionPoints||0} point(s)</h3><div class="ascension-upgrade-list">${ASCENSION_UPGRADES.map(u=>{const level=Number(state.ascensionUpgrades?.[u.id])||0;return `<article class="ascension-upgrade"><span>${u.icon}</span><div><b>${u.name} · Niv. ${level}/${u.max}</b><small>${u.desc}</small></div><button data-asc-upgrade="${u.id}" ${level>=u.max||(state.ascensionPoints||0)<u.cost?'disabled':''}>${level>=u.max?'MAX':`Améliorer · ${u.cost} pt`}</button></article>`}).join('')}</div>`;
+ const reward=document.getElementById('ascensionReward');if(reward)reward.textContent='Après confirmation : argent, bâtiments et recherches sont réinitialisés. Succès, compte, points et galaxies débloquées sont conservés.';
+}
 function cloneState(value){return JSON.parse(JSON.stringify(value||{}))}
 function unionValues(a,b){return [...new Set([...(Array.isArray(a)?a:[]),...(Array.isArray(b)?b:[])])]}
 function mergeBase(a,b){const out={...(b||{}),...(a||{})};for(const key of new Set([...Object.keys(a||{}),...Object.keys(b||{})])){const x=Number(a?.[key]),y=Number(b?.[key]);if(Number.isFinite(x)&&Number.isFinite(y))out[key]=Math.min(x,y)}return out}
@@ -553,9 +610,20 @@ function claimAchievement(id){
   render();
   toast('🏅 Succès : '+a[1]+' · +'+fmt(a[5]));
 }
-function prestige(){const target=ascensionTarget();if(!ascensionReady()){toast('⛏️ Ascension : 10 bâtiments de chaque type sur les 32 planètes sont requis');return}if(state.runTotal<target)return;const keep={lifetimeTotal:state.lifetimeTotal,prestige:state.prestige+1,crystals:state.crystals,research:{...state.research},xp:state.xp,level:state.level,clicks:state.clicks,spent:state.spent,account:state.account,achievements:[...state.achievements],quests:JSON.parse(JSON.stringify(state.quests||{}))};state=Object.assign(fresh(),keep);ensureQuests();for(const q of QUESTS)if(['build','rate','world','planetbuild'].includes(q[3])){const slot=state.quests[q[0]];if(q[3]==='planetbuild')slot.baseByWorld={};else slot.base=questRawValue(q)}save();toast('Ascension réussie');render()}
+function prestige(){
+ const target=ascensionTarget(),g=currentGalaxy();
+ if(!ascensionReady()){toast('Ascension impossible : vérifie les 32 planètes et les 10 bâtiments de chaque type.');return}
+ if(state.runTotal<target){toast('Argent insuffisant pour l’ascension.');return}
+ if(!window.confirm(`Confirmer l’ascension de ${GALAXIES[g].name} ?\n\nTu recevras ${ascensionPointReward()} point(s) d’ascension.\n${g<2?'La galaxie suivante sera débloquée.':'Tu renforces ta progression permanente.'}\n\nL’argent, les bâtiments et les recherches seront réinitialisés. Les succès, le compte et les bonus permanents seront conservés.`))return;
+ const completedBuildings=Object.fromEntries(Object.entries(state.buildings||{}).filter(([key])=>Number(key.split('-')[0])<g*32));
+ const keep={buildings:completedBuildings,lifetimeTotal:state.lifetimeTotal,prestige:state.prestige+1,crystals:state.crystals,ascensionPoints:(state.ascensionPoints||0)+ascensionPointReward(),galaxiesUnlocked:Math.max(state.galaxiesUnlocked||1,Math.min(3,g+2)),ascensionUpgrades:{...(state.ascensionUpgrades||{})},research:{},xp:state.xp,level:state.level,clicks:state.clicks,spent:state.spent,account:state.account,achievements:[...state.achievements],achievementClaimed:[...(state.achievementClaimed||[])],quests:JSON.parse(JSON.stringify(state.quests||{})),campaignClaimed:[...(state.campaignClaimed||[])],lastAccountUserId:state.lastAccountUserId};
+ state=Object.assign(fresh(),keep);state.buildings=Object.assign(state.buildings,completedBuildings);ensureQuests();
+ for(const q of QUESTS)if(['build','rate','world','planetbuild'].includes(q[3])){const slot=state.quests[q[0]];if(q[3]==='planetbuild')slot.baseByWorld={};else slot.base=questRawValue(q)}
+ selectedWorld=Math.min(95,Math.min(2,state.galaxiesUnlocked-1)*32);state.activeWorld=selectedWorld;localStorage.setItem('sm-v2-world',selectedWorld);
+ save();toast('Ascension réussie · bonus permanents conservés');render();
+}
 
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='reminderLater'){dismissAccountReminder();return}if(b.id==='reminderCreateAccount'||b.id==='reminderLoginAccount'){closeAccountReminder();nav('account');document.getElementById('emailInput')?.focus({preventScroll:true});return}if(b.dataset.nav){nav(b.dataset.nav);return}if(b.id==='mineBtn'){mine();return}if(b.dataset.buy!==undefined){buyBuilding(Number(b.dataset.buy));return}if(b.dataset.tech){buyTech(b.dataset.tech);return}if(b.dataset.quest){claimQuest(b.dataset.quest,b.dataset.questLevel);return}if(b.dataset.claim){claim(b.dataset.claim,b.dataset.claimType);return}if(b.dataset.achievement){claimAchievement(b.dataset.achievement);return}if(b.dataset.mtab){missionTab=b.dataset.mtab;document.querySelectorAll('[data-mtab]').forEach(x=>x.classList.toggle('active',x===b));renderMissions();return}if(b.id==='prestigeBtn'){prestige();return}if(b.id==='createAccount'){createAccount();return}if(b.id==='loginAccount'){loginAccount();return}if(b.id==='logoutAccount'){logout();return}if(b.id==='recoverPassword'){recoverPassword();return}if(b.id==='saveNewPassword'){saveNewPassword();return}if(b.id==='cancelPasswordRecovery'){passwordRecoveryMode=false;renderAccount();return}if(b.id==='forceSync'){syncCloud(true).then(ok=>{if(ok)toast('☁️ Sauvegarde synchronisée')});return}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='reminderLater'){dismissAccountReminder();return}if(b.id==='reminderCreateAccount'||b.id==='reminderLoginAccount'){closeAccountReminder();nav('account');document.getElementById('emailInput')?.focus({preventScroll:true});return}if(b.dataset.nav){nav(b.dataset.nav);return}if(b.dataset.ascUpgrade){buyAscensionUpgrade(b.dataset.ascUpgrade);return}if(b.dataset.galaxy!==undefined){const g=Number(b.dataset.galaxy);if(g<state.galaxiesUnlocked){selectedWorld=g*32;state.activeWorld=selectedWorld;localStorage.setItem('sm-v2-world',selectedWorld);save();render()}return}if(b.id==='mineBtn'){mine();return}if(b.dataset.buy!==undefined){buyBuilding(Number(b.dataset.buy));return}if(b.dataset.tech){buyTech(b.dataset.tech);return}if(b.dataset.quest){claimQuest(b.dataset.quest,b.dataset.questLevel);return}if(b.dataset.claim){claim(b.dataset.claim,b.dataset.claimType);return}if(b.dataset.achievement){claimAchievement(b.dataset.achievement);return}if(b.dataset.mtab){missionTab=b.dataset.mtab;document.querySelectorAll('[data-mtab]').forEach(x=>x.classList.toggle('active',x===b));renderMissions();return}if(b.id==='prestigeBtn'){prestige();return}if(b.id==='createAccount'){createAccount();return}if(b.id==='loginAccount'){loginAccount();return}if(b.id==='logoutAccount'){logout();return}if(b.id==='recoverPassword'){recoverPassword();return}if(b.id==='saveNewPassword'){saveNewPassword();return}if(b.id==='cancelPasswordRecovery'){passwordRecoveryMode=false;renderAccount();return}if(b.id==='forceSync'){syncCloud(true).then(ok=>{if(ok)toast('☁️ Sauvegarde synchronisée')});return}});
 setInterval(()=>{ensureDaily();ensureWeekly();ensureQuests();checkEvent();checkAchievements();if(state.clickStreak&&Date.now()-state.lastClickAt>2200){state.clickStreak=0;}const passiveGain=autoRate()/4;if(passiveGain>0){earn(passiveGain);save(true)}else save(false);if(document.visibilityState==='visible')render();},250);
 setInterval(()=>{if(state.account)syncCloud(false)},60000);
 window.addEventListener('online',()=>{if(state.account){cloudLastError='';cloudRetryAt=0;setCloudMessage('Connexion rétablie · synchronisation en cours.');syncCloud(true)}});
