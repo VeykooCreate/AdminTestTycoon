@@ -88,11 +88,13 @@ const QUESTS=[
 function normalizedQuestLevel(slot){const savedLevel=Math.max(1,Math.floor(Number(slot?.level)||1));const claimed=Math.max(0,Math.floor(Number(slot?.completed)||0));return Math.min(100000,Math.max(savedLevel,claimed+1))}
 function questLevel(id){return normalizedQuestLevel(state.quests?.[id])}
 function questNeed(q,lv=questLevel(q[0])){
- return Math.min(Number.MAX_SAFE_INTEGER,Math.max(1,Math.ceil(q[4]*Math.pow(q[5],lv-1))));
+ return Math.min(Number.MAX_VALUE,Math.max(1,Math.ceil(q[4]*Math.pow(q[5],lv-1))));
 }
 function questReward(q,lv=questLevel(q[0])){
  const planet=Math.max(1,selectedWorld+1);
- return Math.min(Number.MAX_SAFE_INTEGER,Math.ceil(questNeed(q,lv)*0.11*Math.pow(1.35,lv-1)*Math.pow(1.18,planet-1)));
+ const divisor=['investor','credits'].includes(q[0])?10:1;
+ const calculated=Math.ceil(questNeed(q,lv)*0.11/divisor*Math.pow(1.35,lv-1)*Math.pow(1.18,planet-1));
+ return Math.min(Number.MAX_VALUE,calculated,questNeed(q,lv));
 }
 function questRawValue(q,world=selectedWorld){
  switch(q[3]){
@@ -294,9 +296,9 @@ function worldFactor(w){const p=Math.min(1,worldProgress(w)/(BUILDING_ROLES.leng
 function cost(w,b){
  const n=state.buildings[w+'-'+b]||0;
  // V2.5 : seuls les 4 premiers bâtiments du premier secteur ont un équilibrage spécial.
- if(w===0 && b<4){const bases=[1500,6000,24000,96000];return 5*Math.ceil(bases[b]*Math.pow(1.16,n)*eventMult('cost'));}
+ if(w===0 && b<4){const bases=[1500,6000,24000,96000];return 6*Math.ceil(bases[b]*Math.pow(1.16,n)*eventMult('cost'));}
  const planetInflation=Math.pow(worldFactor(w),1.15);
- return 5*Math.ceil((500*Math.pow(28,w)*Math.pow(5.5,b)*Math.pow(1.16,n))*planetInflation/5*eventMult('cost'));
+ return 18*Math.ceil((500*Math.pow(28,w)*Math.pow(5.5,b)*Math.pow(1.16,n))*planetInflation/5*eventMult('cost'));
 }
 function prestigeMult(){return 1+.18*state.prestige}
 function techOwned(id){return !!state.research[id]}
@@ -305,9 +307,9 @@ function clickPower(){let m=100*prestigeMult();if(techOwned('laser'))m*=1.5;if(t
 function baseProd(w,b){
  // V2.5 : économie V2.3 inchangée partout sauf les 4 premiers bâtiments du premier secteur.
  if(w===0 && b<4){return [20,75,280,1050][b];}
- return 100*(1.1+.18*w)*Math.pow(3.2,w)*Math.pow(2,b)*Math.max(1,2-b*.08)*(w>=12?Math.pow(1.16,w-11):1);
+ return 1000*(1.1+.18*w)*Math.pow(3.2,w)*Math.pow(2,b)*Math.max(1,2-b*.08)*(w>=12?Math.pow(1.16,w-11):1);
 }
-function autoRate(){let r=0;WORLDS.forEach((_,w)=>BUILDING_ROLES.forEach((__,b)=>r+=(state.buildings[w+'-'+b]||0)*baseProd(w,b)*WORLDS[w][3]));return r*prestigeMult()*prodMult()*3*eventMult('prod')*eventMult('income')}
+function autoRate(){let r=0;WORLDS.forEach((_,w)=>BUILDING_ROLES.forEach((__,b)=>r+=(state.buildings[w+'-'+b]||0)*baseProd(w,b)*WORLDS[w][3]));return r*prestigeMult()*prodMult()*3*eventMult('prod')*eventMult('income')/3*75}
 function earn(x){if(!Number.isFinite(x)||x<=0)return;state.money+=x;state.runTotal+=x;state.lifetimeTotal+=x;state.xp+=Math.max(1,Math.floor(Math.log10(Math.max(10,x))+2));state.level=Math.floor(Math.sqrt(state.xp/80))+1}
 function spend(x){state.money-=x;state.spent+=x}
 function toast(t){const e=document.getElementById('toast');if(!e)return;e.textContent=t;e.classList.add('toast-show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('toast-show'),2200)}
@@ -334,7 +336,7 @@ function render(){
 function renderBuildings(){
  const box=document.getElementById('buildingList');if(!box)return;const w=WORLDS[selectedWorld];
  if(!worldUnlocked(selectedWorld)){box.innerHTML='<div class="panel"><b>SECTEUR VERROUILLÉ</b><p class="hint">Termine la colonie précédente : au moins 1 unité de chaque bâtiment.</p></div>';return}
- const list=buildingSet(selectedWorld);box.innerHTML=`<div class="planet-building-head"><span>${w[0]}</span><div><strong>${w[1]}</strong><small>Les modèles changent selon le secteur. Les niveaux, prix et revenus de ta sauvegarde restent inchangés.</small></div><b>×${w[3]}</b></div>`+list.map((x,b)=>{const n=state.buildings[selectedWorld+'-'+b]||0,c=cost(selectedWorld,b),income=baseProd(selectedWorld,b)*w[3]*prestigeMult()*prodMult()*3*eventMult('prod')*eventMult('income');return `<article class="building"><div class="building-icon">${x[1]}</div><div class="building-info"><strong>${x[0]}</strong><small>Niveau ${n} · +${fmt(income)}/s</small><em>Prochain coût · ${fmt(c)}</em></div><button class="buy" data-buy="${b}" ${state.money<c?'disabled':''}>ACHETER</button></article>`}).join('');
+ const list=buildingSet(selectedWorld);box.innerHTML=`<div class="planet-building-head"><span>${w[0]}</span><div><strong>${w[1]}</strong><small>Les modèles changent selon le secteur. Les niveaux, prix et revenus de ta sauvegarde restent inchangés.</small></div><b>×${w[3]}</b></div>`+list.map((x,b)=>{const n=state.buildings[selectedWorld+'-'+b]||0,c=cost(selectedWorld,b),income=baseProd(selectedWorld,b)*w[3]*prestigeMult()*prodMult()*75*eventMult('prod')*eventMult('income');return `<article class="building"><div class="building-icon">${x[1]}</div><div class="building-info"><strong>${x[0]}</strong><small>Niveau ${n} · +${fmt(income)}/s</small><em>Prochain coût · ${fmt(c)}</em></div><button class="buy" data-buy="${b}" ${state.money<c?'disabled':''}>ACHETER</button></article>`}).join('');
 }
 function renderMap(){
  const box=document.getElementById('galaxyMap');if(!box)return;box.innerHTML='<div class="map-grid-lines"></div><div class="galaxy-core">✦</div>';
@@ -391,7 +393,7 @@ function mergeSnapshots(first,second){
  const preferred=Number(local.prestige||0)>Number(cloud.prestige||0)?local:Number(cloud.prestige||0)>Number(local.prestige||0)?cloud:Number(local.localUpdatedAt||0)>=Number(cloud.localUpdatedAt||0)?local:cloud;
  const other=preferred===local?cloud:local;const merged=cloneState(preferred);
  merged.prestige=Math.max(Number(local.prestige)||0,Number(cloud.prestige)||0);
- if(samePrestige){merged.money=Math.max(Number(local.money)||0,Number(cloud.money)||0);merged.runTotal=Math.max(Number(local.runTotal)||0,Number(cloud.runTotal)||0);merged.buildings=Object.fromEntries(Object.keys({...local.buildings,...cloud.buildings}).map(k=>[k,Math.max(Number(local.buildings?.[k])||0,Number(cloud.buildings?.[k])||0)]))}
+ if(samePrestige){merged.money=Math.max(0,Number(preferred.money)||0);merged.runTotal=Math.max(Number(local.runTotal)||0,Number(cloud.runTotal)||0);merged.buildings=Object.fromEntries(Object.keys({...local.buildings,...cloud.buildings}).map(k=>[k,Math.max(Number(local.buildings?.[k])||0,Number(cloud.buildings?.[k])||0)]))}
  merged.lifetimeTotal=Math.max(Number(local.lifetimeTotal)||0,Number(cloud.lifetimeTotal)||0);merged.xp=Math.max(Number(local.xp)||0,Number(cloud.xp)||0);merged.level=Math.max(Number(local.level)||1,Number(cloud.level)||1);merged.clicks=Math.max(Number(local.clicks)||0,Number(cloud.clicks)||0);merged.spent=Math.max(Number(local.spent)||0,Number(cloud.spent)||0);merged.crystals=Math.max(Number(local.crystals)||0,Number(cloud.crystals)||0);
  merged.research={...(local.research||{}),...(cloud.research||{})};merged.achievements=unionValues(local.achievements,cloud.achievements);merged.achievementClaimed=unionValues(local.achievementClaimed,cloud.achievementClaimed);merged.campaignClaimed=unionValues(local.campaignClaimed,cloud.campaignClaimed);merged.seenWorlds=unionValues(local.seenWorlds,cloud.seenWorlds);
  merged.daily=mergeCycle(local.daily,cloud.daily);merged.weekly=mergeCycle(local.weekly,cloud.weekly);merged.quests=mergeQuestState(local.quests,cloud.quests);merged.lastAt=Math.max(Number(local.lastAt)||0,Number(cloud.lastAt)||0);merged.offlineLast=Math.max(Number(local.offlineLast)||0,Number(cloud.offlineLast)||0);merged.localUpdatedAt=Math.max(Number(local.localUpdatedAt)||0,Number(cloud.localUpdatedAt)||0);merged.syncRevision=Math.max(Number(local.syncRevision)||0,Number(cloud.syncRevision)||0);merged.lastAccountUserId=local.lastAccountUserId||cloud.lastAccountUserId||null;merged.account=preferred.account||other.account||null;merged.cloudMeta={...(other.cloudMeta||{}),...(preferred.cloudMeta||{})};
@@ -474,7 +476,24 @@ async function loadLeaderboard(force=false){
  try{const {data,error}=await sb.from('leaderboard').select('nickname,total,prestige,level,planet').order('total',{ascending:false}).order('prestige',{ascending:false}).order('level',{ascending:false}).limit(10);if(error)throw error;lastLeaderboard=Date.now();box.innerHTML=data?.length?data.map((player,index)=>{const planet=WORLDS[Math.max(0,Math.min(WORLDS.length-1,Math.floor(Number(player.planet||1))-1))][1];return `<div class="rank-row"><b>#${index+1}</b><span>${escapeHTML(player.nickname||'Mineur')}</span><strong>${fmt(Number(player.total||0))}</strong><small>P${player.prestige||0} · N${player.level||1} · ${escapeHTML(planet)}</small></div>`}).join(''):'<p class="hint">Aucun commandant classé pour le moment.</p>'}catch(error){box.innerHTML='<p class="hint">Classement momentanément indisponible.</p>';console.warn('Leaderboard',error)}finally{leaderboardBusy=false}
 }
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
-async function logout(){if(!state.account)return;try{if(cloudDirty){const synced=await syncCloud(true);if(!synced){toast('Synchronisation impossible · tu restes connecté et ta partie est conservée.');return}}if(sb){const {error}=await sb.auth.signOut({scope:'local'});if(error)throw error}if(state.account){state.lastAccountUserId=state.account.userId;state.account=null;cloudDirty=false;save(false);render();toast('Déconnexion · progression conservée localement')}}catch(error){toast(authErrorMessage(error))}}
+async function logout(){
+ if(!state.account)return;
+ const account={...state.account};
+ let syncFailed=false;
+ if(cloudDirty){
+  try{
+   const session=await getCloudSession();
+   if(session?.user?.id===account.userId)syncFailed=!(await syncCloud(true));
+  }catch{syncFailed=true}
+ }
+ try{if(sb){const {error}=await sb.auth.signOut({scope:'local'});if(error)throw error}}
+ catch(error){console.warn('Local sign out',error)}
+ state.lastAccountUserId=account.userId||state.lastAccountUserId;
+ state.account=null;
+ save(false);
+ render();
+ toast(syncFailed?'Déconnecté · progression conservée sur cet appareil; synchronisation à reprendre à la prochaine connexion.':'Déconnexion · progression conservée localement');
+}
 function buyBuilding(b){const c=cost(selectedWorld,b);if(state.money<c){toast('Crédits insuffisants');return}spend(c);const k=selectedWorld+'-'+b;state.buildings[k]=(state.buildings[k]||0)+1;state.xp+=20;save();render()}
 function buyTech(id){let t=null;for(const br of BRANCH_ORDER){const found=BRANCHES[br].find(x=>x[0]===id);if(found){t=found;break}}if(!t||techOwned(id)||state.money<t[2])return;const br=BRANCH_ORDER.find(k=>BRANCHES[k].some(x=>x[0]===id));const arr=BRANCHES[br],idx=arr.findIndex(x=>x[0]===id);if(idx>0&&!techOwned(arr[idx-1][0])){toast('Technologie précédente requise');return}spend(t[2]);state.research[id]=true;state.xp+=500;save();toast('Technologie acquise');render()}
 function spawnClickFx(amount,critical=false){
