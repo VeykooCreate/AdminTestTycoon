@@ -82,11 +82,11 @@ function buildingSet(w){
 }
 
 const BRANCHES={
- extraction:[['laser','Laser industriel',5e6,'+50% puissance de clic'],['plasma','Foreuses plasma',2e8,'+80% puissance de clic'],['abyss','Forage abyssal',5e11,'x2 clic'],['stellar','Extraction stellaire',5e15,'x3 clic'],['voidmine','Mine du Vide',5e21,'x5 clic']],
- automation:[['ai','IA autonome',2.5e8,'+40% production'],['robots','Essaim robotique',1e10,'+80% production'],['nano','Nanobots industriels',2e13,'+120% production'],['quantum','Calcul quantique',1e18,'x3 production'],['dyson','Réseau Dyson',2e25,'x6 production']],
- energy:[['reactor','Réacteur quantique',2e10,'x1,6 production globale'],['fusion','Fusion contrôlée',2e15,'x2 production globale'],['antimatter','Réacteur antimatière',5e22,'x2,5 production globale'],['singularity','Moteur de singularité',1e28,'x3 production globale'],['deep','Conduit du Vide',5e46,'x6 production globale']],
- economy:[['logistics','Logistique zéro-g',2e11,'-8% coûts bâtiments'],['market','Marché galactique',2e18,'+20% revenus'],['fractal','Économie fractale',1e31,'-15% coûts'],['trade','Réseau commercial',5e36,'-20% coûts'],['galaxy','Marché galactique',1e45,'+50% revenus']],
- exploration:[['survey','Cartographie orbitale',1e7,'-10% seuils de planète'],['colonies','Colonies avancées',1e12,'+25% bonus planétaire'],['wormholes','Routes par trous de ver',1e22,'+50% exploration'],['dimensions','Navigation dimensionnelle',1e35,'accès aux secteurs avancés'],['ascension','Architecture d’ascension',5e49,'+50% bonus de prestige']]
+ extraction:[['laser','Laser industriel',5e6,'+50% puissance de clic'],['plasma','Foreuses plasma',2e8,'+80% puissance de clic'],['abyss','Forage abyssal',5e11,'x2 clic'],['stellar','Extraction stellaire',5e15,'x3 clic'],['voidmine','Mine du Vide',5e21,'x5 clic'],['overdrive','Surcharge d’extraction',5e55,'x10 puissance de clic']],
+ automation:[['ai','IA autonome',2.5e8,'+40% production'],['robots','Essaim robotique',1e10,'+80% production'],['nano','Nanobots industriels',2e13,'+120% production'],['quantum','Calcul quantique',1e18,'x3 production'],['dyson','Réseau Dyson',2e25,'x6 production'],['singularityAI','IA de singularité',5e58,'x10 production automatique']],
+ energy:[['reactor','Réacteur quantique',2e10,'x1,6 production globale'],['fusion','Fusion contrôlée',2e15,'x2 production globale'],['antimatter','Réacteur antimatière',5e22,'x2,5 production globale'],['singularity','Moteur de singularité',1e28,'x3 production globale'],['deep','Conduit du Vide',5e46,'x6 production globale'],['zeroPoint','Réacteur à énergie zéro',1e60,'x10 production globale']],
+ economy:[['logistics','Logistique zéro-g',2e11,'-8% coûts bâtiments'],['market','Marché galactique',2e18,'+20% revenus'],['fractal','Économie fractale',1e31,'-15% coûts'],['trade','Réseau commercial',5e36,'-20% coûts'],['galaxy','Marché galactique',1e45,'+50% revenus'],['matterFabric','Économie de matière noire',1e58,'−30% coût des bâtiments']],
+ exploration:[['survey','Cartographie orbitale',1e7,'-10% seuils de planète'],['colonies','Colonies avancées',1e12,'+25% bonus planétaire'],['wormholes','Routes par trous de ver',1e22,'+50% exploration'],['dimensions','Navigation dimensionnelle',1e35,'accès aux secteurs avancés'],['ascension','Architecture d’ascension',5e49,'+50% bonus de prestige'],['multiverse','Cartographie du multivers',1e62,'+50% bonus planétaire']]
 };
 const BRANCH_ORDER=Object.keys(BRANCHES);
 const DAILY_REWARDS=[5e7,1e8,5e8,1e9];
@@ -335,17 +335,17 @@ function worldUnlocked(w){
  return BUILDING_ROLES.every((_,b)=>(state.buildings[(w-1)+'-'+b]||0)>=1);
 }
 function worldProgress(w){return BUILDING_ROLES.reduce((a,_,b)=>a+(state.buildings[w+'-'+b]||0),0)}
-function worldFactor(w){const local=w%32,p=Math.min(1,worldProgress(w)/(BUILDING_ROLES.length*20));return 1+local*.22+p*(0.6+local*.06)+(Number(state.ascensionUpgrades?.exploration)||0)*.08}
+function worldFactor(w){const local=w%32,p=Math.min(1,worldProgress(w)/(BUILDING_ROLES.length*20));return 1+local*.22+p*(0.6+local*.06)+(Number(state.ascensionUpgrades?.exploration)||0)*.08+(techOwned('multiverse')?.5:0)}
 function cost(w,b){
  const n=state.buildings[w+'-'+b]||0,galaxy=Math.floor(w/32),local=w%32;
  if(galaxy===0&&local===0&&b<4){const bases=[1500,6000,24000,96000];return 6*Math.ceil(bases[b]*Math.pow(1.16,n)*eventMult('cost'));}
  const planetInflation=Math.pow(worldFactor(w),1.15);
- return 18*Math.ceil((500*Math.pow(28,local)*Math.pow(5.5,b)*Math.pow(1.16,n))*planetInflation/5*GALAXIES[galaxy].scale*eventMult('cost')*Math.pow(.95,Number(state.ascensionUpgrades?.discount)||0));
+ return 18*Math.ceil((500*Math.pow(28,local)*Math.pow(5.5,b)*Math.pow(1.16,n))*planetInflation/5*GALAXIES[galaxy].scale*eventMult('cost')*Math.pow(.95,Number(state.ascensionUpgrades?.discount)||0)*(techOwned('matterFabric')?.7:1));
 }
 function prestigeMult(){return 1+.18*state.prestige}
 function techOwned(id){return !!state.research[id]}
-function prodMult(){let m=(1+state.prestige*.18)*(1+.25*(Number(state.ascensionUpgrades?.production)||0));for(const br of BRANCH_ORDER)BRANCHES[br].forEach(t=>{if(techOwned(t[0])&&['automation','energy'].includes(br))m*=br==='automation'?1.25:1.2});return m}
-function clickPower(){let m=100*prestigeMult()*(1+.25*(Number(state.ascensionUpgrades?.click)||0));if(techOwned('laser'))m*=1.5;if(techOwned('plasma'))m*=1.8;if(techOwned('abyss'))m*=2;if(techOwned('stellar'))m*=3;if(techOwned('voidmine'))m*=5;return m*eventMult('click')*eventMult('income')}
+function prodMult(){let m=(1+state.prestige*.18)*(1+.25*(Number(state.ascensionUpgrades?.production)||0));for(const br of BRANCH_ORDER)BRANCHES[br].forEach(t=>{if(techOwned(t[0])&&['automation','energy'].includes(br))m*=br==='automation'?1.25:1.2});if(techOwned('singularityAI'))m*=10;if(techOwned('zeroPoint'))m*=10;return m}
+function clickPower(){let m=100*prestigeMult()*(1+.25*(Number(state.ascensionUpgrades?.click)||0));if(techOwned('laser'))m*=1.5;if(techOwned('plasma'))m*=1.8;if(techOwned('abyss'))m*=2;if(techOwned('stellar'))m*=3;if(techOwned('voidmine'))m*=5;if(techOwned('overdrive'))m*=10;return m*eventMult('click')*eventMult('income')}
 function baseProd(w,b){
  const galaxy=Math.floor(w/32),local=w%32;
  if(galaxy===0&&local===0&&b<4)return [20,75,280,1050][b];
@@ -399,7 +399,14 @@ function renderMap(){
  document.getElementById('sectorDetail').innerHTML=`<div class="panel-title"><b>${w[0]} ${w[1]}</b><span style="margin-left:auto">×${w[3]}</span></div><p class="hint">${GALAXIES[g].name} · Planète ${(safeSelected%32)+1}/32 · Développement ${Math.round(worldProgress(safeSelected)/(BUILDING_ROLES.length*20)*100)}% · Indice industriel ×${worldFactor(safeSelected).toFixed(2)} · ${worldUnlocked(safeSelected)?'PLANÈTE ACTIVE':'VERROUILLÉE'}</p>`;
 }
 function renderTech(){
- const box=document.getElementById('techTree');if(!box)return;box.innerHTML=BRANCH_ORDER.map((br,bi)=>`<section class="tech-branch"><div class="tech-branch-head"><span>${['⛏','🤖','⚡','💰','🌌'][bi]}</span><h3>${branchName(br)}</h3></div><div class="tech-chain">${BRANCHES[br].map((t,i)=>{const prev=i?BRANCHES[br][i-1][0]:null,owned=techOwned(t[0]),available=!prev||techOwned(prev);return `<div class="tech-node ${owned?'owned':''} ${available?'':'locked'}"><div class="tech-node-dot"></div><strong>${owned?'✓ ':''}${t[1]}</strong><small>${t[3]} · ${fmt(t[2])}</small><button class="${available&&!owned?'buy':'secondary'}" data-tech="${t[0]}" ${owned||!available||state.money<t[2]?'disabled':''}>${owned?'ACQUISE':available?'RECHERCHER':'VERROUILLÉE'}</button></div>`}).join('')}</div></section>`).join('');
+ const box=document.getElementById('techTree');if(!box)return;
+ const hadAccordions=!!box.querySelector('details');const openNow=new Set([...box.querySelectorAll('details[open]')].map(x=>x.id));
+ box.innerHTML=BRANCH_ORDER.map((br,bi)=>{
+  const ownedCount=BRANCHES[br].filter(t=>techOwned(t[0])).length;
+  const canBuy=BRANCHES[br].some((t,i)=>!techOwned(t[0])&&state.money>=t[2]&&(i===0||techOwned(BRANCHES[br][i-1][0])));
+  const id='tech-branch-'+br;
+  return `<details id="${id}" class="tech-branch tech-accordion" ${hadAccordions?(openNow.has(id)?'open':''):bi===0?'open':''}><summary class="tech-branch-head"><span>${['⛏','🤖','⚡','💰','🌌'][bi]}</span><h3>${branchName(br)}</h3><small class="tech-count">${ownedCount}/${BRANCHES[br].length}</small>${canBuy?'<i class="quest-ready-dot" aria-label="Technologie disponible"></i>':''}<span class="accordion-chevron">⌄</span></summary><div class="tech-chain">${BRANCHES[br].map((t,i)=>{const prev=i?BRANCHES[br][i-1][0]:null,owned=techOwned(t[0]),available=!prev||techOwned(prev),ready=available&&!owned&&state.money>=t[2];return `<div class="tech-node ${owned?'owned':''} ${available?'':'locked'}"><div class="tech-node-dot"></div><strong>${ready?'<i class="quest-ready-dot"></i> ':''}${owned?'✓ ':''}${t[1]}</strong><small>${t[3]} · ${fmt(t[2])}</small><button class="${available&&!owned?'buy':'secondary'}" data-tech="${t[0]}" ${owned||!available||state.money<t[2]?'disabled':''}>${owned?'ACQUISE':available?'RECHERCHER':'VERROUILLÉE'}</button></div>`}).join('')}</div></details>`
+ }).join('');
 }
 function branchName(x){return ({extraction:'EXTRACTION',automation:'AUTOMATISATION',energy:'ÉNERGIE',economy:'ÉCONOMIE',exploration:'EXPLORATION'})[x]}
 function missionValue(m){switch(m[2]){case'click':return state.clicks;case'lifetime':return state.lifetimeTotal;case'run':return state.runTotal;case'build':return totalBuildings();case'spend':return state.spent;case'tech':return Object.keys(state.research).length;case'level':return state.level;case'world':return WORLDS.filter((_,i)=>worldUnlocked(i)).length;default:return 0}}
@@ -412,28 +419,33 @@ function ensureMissionState(){
 }
 function dailyValue(d){const base=state.daily.base;switch(d[0]){case'click':return state.clicks-base.clicks;case'build':return totalBuildings()-base.buildings;case'earn':return state.lifetimeTotal-base.lifetime;case'spend':return state.spent-base.spent;default:return 0}}
 function dailySet(){ensureDaily();const seed=Number(dateKey().replaceAll('-',''));return DAILY_TEMPLATES.map((_,i)=>DAILY_TEMPLATES[(seed+i*7)%DAILY_TEMPLATES.length][i])}
+function missionSectionReady(tab){
+ ensureDaily();ensureWeekly();ensureMissionState();
+ if(tab==='daily')return dailySet().some((d,i)=>!state.daily.claimed.includes(i)&&dailyValue(d)>=d[2]);
+ if(tab==='campaign')return CAMPAIGN.some(m=>!state.campaignClaimed.includes(m[0])&&missionValue(m)>=m[3]);
+ if(tab==='weekly')return WEEKLY.some((m,i)=>!state.weekly.claimed.includes(i)&&weeklyValue(m)>=m[3]);
+ if(tab==='quests')return QUESTS.some(q=>questDone(q));
+ if(tab==='achievements')return ACHIEVEMENTS.some(a=>!state.achievementClaimed.includes(a[0])&&achievementValue(a)>=a[4]);
+ return false;
+}
+function renderMissionSection(tab){
+ if(tab==='quests'){
+  ensureQuests();
+  return QUESTS.map(q=>{const lv=questLevel(q[0]),need=questNeed(q,lv),value=questValue(q),done=value>=need,reward=questReward(q,lv),pct=Math.min(100,value/Math.max(1,need)*100);return `<article class="mission quest-card ${done?'mission-ready':''}"><div class="mission-head"><strong>${done?'<i class="quest-ready-dot"></i> ●':'○'} ${q[1]} <small>NIVEAU ${lv}</small></strong><b>+${fmt(reward)}</b></div><small>${q[2]} · ${fmt(value)} / ${fmt(need)} · bonus planète ×${Math.pow(1.18,selectedWorld).toFixed(2)}</small><div class="bar"><i style="width:${pct}%"></i></div><button class="${done?'primary':'secondary'}" data-quest="${q[0]}" data-quest-level="${lv}" ${done?'':'disabled'}>${done?'TERMINER LE NIVEAU '+lv+' · DÉBLOQUER '+(lv+1):'EN COURS · NIVEAU '+lv}</button></article>`}).join('');
+ }
+ if(tab==='daily')return dailySet().map((d,i)=>missionHTML('d'+i,d[1],d[0],d[2],DAILY_REWARDS[i],state.daily.claimed.includes(i),dailyValue(d))).join('');
+ if(tab==='campaign')return CAMPAIGN.map(m=>missionHTML(m[0],m[1],m[2],m[3],m[4],state.campaignClaimed.includes(m[0]),missionValue(m))).join('');
+ if(tab==='weekly')return WEEKLY.map((m,i)=>missionHTML(m[0],m[1],m[2],m[3],m[4],state.weekly.claimed.includes(i),weeklyValue(m))).join('');
+ return ACHIEVEMENTS.map(a=>{const claimed=state.achievementClaimed.includes(a[0]),value=achievementValue(a),done=value>=a[4],pct=Math.min(100,value/Math.max(1,a[4])*100);return `<article class="mission ${claimed?'achievement-done':''} ${done&&!claimed?'mission-ready':''}"><div class="mission-head"><strong>${done&&!claimed?'<i class="quest-ready-dot"></i> ':''}${claimed?'🏅':done?'●':'○'} ${a[1]}</strong><b>+${fmt(a[5])}</b></div><small>${a[2]} · ${fmt(value)} / ${fmt(a[4])}</small><div class="bar"><i style="width:${pct}%"></i></div><button class="${done&&!claimed?'primary':'secondary'}" data-achievement="${a[0]}" ${done&&!claimed?'':'disabled'}>${claimed?'RÉCLAMÉ':done?'RÉCLAMER':'EN COURS'}</button></article>`}).join('');
+}
 function renderMissions(){
  ensureDaily();ensureWeekly();ensureMissionState();
  const box=document.getElementById('missionList');if(!box)return;
- if(missionTab==='quests'){renderQuests();return}
- if(missionTab==='daily'){
-   const ds=dailySet();
-   box.innerHTML=ds.map((d,i)=>missionHTML('d'+i,d[1],d[0],d[2],DAILY_REWARDS[i],state.daily.claimed.includes(i),dailyValue(d))).join('');
- }else if(missionTab==='campaign'){
-   box.innerHTML=CAMPAIGN.map(m=>missionHTML(m[0],m[1],m[2],m[3],m[4],state.campaignClaimed.includes(m[0]),missionValue(m))).join('');
- }else if(missionTab==='weekly'){
-   box.innerHTML=WEEKLY.map((m,i)=>missionHTML(m[0],m[1],m[2],m[3],m[4],state.weekly.claimed.includes(i),weeklyValue(m))).join('');
- }else{
-   box.innerHTML=ACHIEVEMENTS.map(a=>{
-     const claimed=state.achievementClaimed.includes(a[0]);
-     const value=achievementValue(a);
-     const done=value>=a[4];
-     const pct=Math.min(100,(value/Math.max(1,a[4]))*100);
-     return `<article class=\"mission ${claimed?'achievement-done':''}\"><div class=\"mission-head\"><strong>${claimed?'🏅':done?'●':'○'} ${a[1]}</strong><b>+${fmt(a[5])}</b></div><small>${a[2]} · ${fmt(value)} / ${fmt(a[4])}</small><div class=\"bar\"><i style=\"width:${pct}%\"></i></div><button class=\"${done&&!claimed?'primary':'secondary'}\" data-achievement=\"${a[0]}\" ${done&&!claimed?'':'disabled'}>${claimed?'RÉCLAMÉ':done?'RÉCLAMER':'EN COURS'}</button></article>`;
-   }).join('');
- }
+ const tabs=[['daily','📅','QUOTIDIEN'],['quests','🎯','QUÊTES'],['campaign','📜','CAMPAGNE'],['weekly','🗓️','HEBDOMADAIRE'],['achievements','🏆','SUCCÈS']];
+ const hadAccordions=!!box.querySelector('details');const openNow=new Set([...box.querySelectorAll('details[open]')].map(x=>x.id));
+ box.innerHTML=tabs.map(([tab,icon,label],i)=>{const id='mission-group-'+tab,ready=missionSectionReady(tab);return `<details id="${id}" class="mission-group" ${hadAccordions?(openNow.has(id)?'open':''):i===0?'open':''}><summary><span class="mission-group-icon">${icon}</span><b>${label}</b><small>${tab==='daily'?dailySet().filter((d,j)=>!state.daily.claimed.includes(j)).length+' disponibles':tab==='quests'?QUESTS.length+' progressions':tab==='campaign'?CAMPAIGN.length+' objectifs':tab==='weekly'?WEEKLY.length+' objectifs':ACHIEVEMENTS.length+' succès'}</small>${ready?'<i class="quest-ready-dot" aria-label="Récompense disponible"></i>':''}<span class="accordion-chevron">⌄</span></summary><div class="mission-group-content">${renderMissionSection(tab)}</div></details>`}).join('');
 }
-function missionHTML(id,title,type,need,reward,claimed,value){const done=value>=need;return `<article class="mission"><div class="mission-head"><strong>${claimed?'✓':done?'●':'○'} ${title}</strong><b>+${fmt(reward)}</b></div><small>${fmt(value)} / ${fmt(need)}</small><div class="bar"><i style="width:${Math.min(100,value/need*100)}%"></i></div><button class="${done&&!claimed?'primary':'secondary'}" data-claim="${id}" data-claim-type="${id[0]==='d'?'daily':id.startsWith('week')?'weekly':'campaign'}" ${done&&!claimed?'':'disabled'}>${claimed?'RÉCLAMÉ':done?'RÉCLAMER':'EN COURS'}</button></article>`}
+function missionHTML(id,title,type,need,reward,claimed,value){const done=value>=need;return `<article class="mission ${done&&!claimed?'mission-ready':''}"><div class="mission-head"><strong>${done&&!claimed?'<i class="quest-ready-dot"></i> ':''}${claimed?'✓':done?'●':'○'} ${title}</strong><b>+${fmt(reward)}</b></div><small>${fmt(value)} / ${fmt(need)}</small><div class="bar"><i style="width:${Math.min(100,value/need*100)}%"></i></div><button class="${done&&!claimed?'primary':'secondary'}" data-claim="${id}" data-claim-type="${id[0]==='d'?'daily':id.startsWith('week')?'weekly':'campaign'}" ${done&&!claimed?'':'disabled'}>${claimed?'RÉCLAMÉ':done?'RÉCLAMER':'EN COURS'}</button></article>`}
 function renderDailyPreview(){const box=document.getElementById('dailyPreview');if(!box)return;ensureDaily();const ds=dailySet();box.innerHTML=ds.map((d,i)=>`<div class="daily-row"><span>${state.daily.claimed.includes(i)?'✓':'○'} ${d[1]}</span><b>+${fmt(DAILY_REWARDS[i])}</b></div>`).join('')}
 const ASCENSION_UPGRADES=[
  {id:'production',name:'Production optimisée',icon:'⚙️',max:5,cost:1,desc:'+25% production par niveau'},

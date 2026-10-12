@@ -80,3 +80,29 @@
 
 /* La règle display:flex de la navigation ne doit jamais annuler hidden. */
 #adminNavButton[hidden] { display: none !important; }
+
+/* V5.6 — accordéons compacts, pensés pour le téléphone */
+.tech-tree{display:grid;grid-template-columns:1fr;gap:10px;align-items:start}
+.tech-accordion{padding:0;overflow:hidden}
+.tech-accordion>summary,.mission-group>summary{display:flex;align-items:center;gap:10px;min-height:56px;padding:13px 15px;cursor:pointer;list-style:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.tech-accordion>summary::-webkit-details-marker,.mission-group>summary::-webkit-details-marker{display:none}
+.tech-accordion>summary::marker,.mission-group>summary::marker{content:""}
+.tech-accordion .tech-branch-head{margin:0;border:0;padding:13px 15px}
+.tech-accordion .tech-branch-head h3{flex:1;font-size:11px;letter-spacing:1px}
+.tech-count,.mission-group>summary small{margin-left:auto;color:var(--muted);font-size:10px;white-space:nowrap}
+.accordion-chevron{display:inline-block!important;margin-left:3px;color:var(--muted);font-size:17px!important;line-height:1;transition:transform .2s}
+.tech-accordion[open] .accordion-chevron,.mission-group[open] .accordion-chevron{transform:rotate(180deg)}
+.tech-accordion[open] .tech-chain{padding:0 12px 12px}
+.tech-accordion .tech-chain{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.quest-ready-dot{display:inline-block!important;flex:0 0 8px;width:8px;height:8px;min-width:8px;min-height:8px;margin:0 4px 0 0;border:1px solid #ffb1ba;border-radius:50%;background:#ff586c;box-shadow:0 0 9px rgba(255,88,108,.65);vertical-align:middle;animation:navPulse 1.4s ease-in-out infinite}
+.tech-branch-head .quest-ready-dot{margin-left:0}
+.mission-tabs{display:none}
+.mission-group{margin:0 0 10px;overflow:hidden;border:1px solid rgba(127,165,200,.16);border-radius:13px;background:linear-gradient(150deg,rgba(11,19,32,.98),rgba(7,12,21,.98))}
+.mission-group>summary{min-height:58px}
+.mission-group>summary b{font-size:11px;letter-spacing:.8px}
+.mission-group-icon{font-size:18px}
+.mission-group-content{padding:0 10px 4px;border-top:1px solid rgba(127,165,200,.1)}
+.mission-group-content .mission{margin-top:10px}
+.mission-ready{border-color:rgba(255,88,108,.3)}
+.mission-head .quest-ready-dot{margin-right:5px}
+@media(max-width:760px){.tech-tree{grid-template-columns:1fr;gap:8px}.tech-accordion>summary,.mission-group>summary{min-height:53px;padding:12px}.tech-accordion .tech-chain{grid-template-columns:1fr;gap:7px}.tech-accordion[open] .tech-chain{padding:0 9px 9px}.tech-node{margin:0;padding:11px}.tech-node strong{font-size:10px}.tech-node small{min-height:0;font-size:8px}.mission-group-content{padding:0 8px 3px}.mission-group>summary b{font-size:10px}.mission-group>summary small{font-size:8px}}

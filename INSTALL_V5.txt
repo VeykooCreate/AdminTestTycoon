@@ -10,3 +10,5 @@ La clé de sauvegarde locale est conservée pour permettre la migration des anci
 
 
 V5.5 : le bouton Admin apparaît dans la navigation après connexion vérifiée avec le compte autorisé. Le pseudo exact ADMIN est filtré du classement affiché par le client. Pour une exclusion garantie côté serveur, il faut aussi adapter la vue/table Supabase du classement.
+
+Version V5.6 : les branches technologiques et les catégories de missions sont repliables pour limiter le défilement sur téléphone.

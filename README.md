@@ -14,3 +14,6 @@ Tester d'abord cette version dans un dépôt GitHub séparé. Ne remplace pas la
 
 ## Notes
 Le projet conserve le client Supabase existant. Aucune migration SQL n'est incluse dans cette version.
+
+
+Version V5.6 : accordéons repliables pour les branches technologiques et catégories de missions, indicateurs rouges sur les catégories et récompenses prêtes, cinq technologies avancées supplémentaires.
