@@ -30,3 +30,15 @@ Version V5.6 : accordéons repliables pour les branches technologiques et catég
 
 ### Mise à jour prudente
 Teste d'abord cette archive sur une branche GitHub distincte ou un déploiement de prévisualisation. Vérifie les sauvegardes locales et Supabase avant de remplacer le jeu public. Le changement de thème et les ajouts d'événement ne nécessitent pas de migration SQL.
+
+
+## Halloween V2 (15 octobre 2026)
+- La carte de la galaxie Halloween ouvre maintenant l’onglet **Colonie**.
+- Bouton de clic 🍬 dans le Centre lorsque la galaxie Halloween est sélectionnée.
+- Les planètes Halloween se débloquent dans l’ordre : les 4 bâtiments de la planète précédente doivent avoir au moins un niveau. La planète 1 est ouverte dès le départ.
+- Boutique des maléfices avec 20 boosts à prix progressifs, dans un menu déroulant.
+- Missions d’Halloween avec récompenses en bonbons, dans un menu déroulant dans Colonie et dans Missions.
+- Thème orange/violet renforcé dans le Centre, y compris l’arrière-plan et le bouton de forage.
+- Une réserve de départ de 250 bonbons est attribuée une seule fois pour permettre de démarrer l’événement.
+
+Tester sur une branche séparée avant de remplacer la version publique. Cette archive a été vérifiée par contrôle de syntaxe JavaScript, mais pas par un test navigateur complet.
