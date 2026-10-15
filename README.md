@@ -42,3 +42,10 @@ Teste d'abord cette archive sur une branche GitHub distincte ou un déploiement 
 - Une réserve de départ de 250 bonbons est attribuée une seule fois pour permettre de démarrer l’événement.
 
 Tester sur une branche séparée avant de remplacer la version publique. Cette archive a été vérifiée par contrôle de syntaxe JavaScript, mais pas par un test navigateur complet.
+
+
+## V4 — Correctif accordéons
+- Les groupes Tech, Missions et la Boutique des maléfices sont fermés par défaut au chargement.
+- L’ouverture/fermeture est stockée en mémoire, indépendamment du DOM, pour résister au rendu automatique toutes les 250 ms.
+- Les clics sur les résumés sont gérés explicitement afin d’éviter que le rendu ne referme immédiatement les panneaux.
+- Cache du service worker et versions des ressources mis à jour.
