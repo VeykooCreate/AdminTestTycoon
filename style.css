@@ -205,3 +205,7 @@ body.halloween-selected .hero-space:after{background:linear-gradient(115deg,tran
     box-sizing:border-box;
   }
 }
+
+/* Compact mobile-safe cloud status: keep indicator dots, hide long sync labels. */
+#headerSyncLabel, #cloudState, #cloudStatus { display: none !important; }
+#accountDot { font-size: 0 !important; min-width: 7px; }
