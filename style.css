@@ -194,11 +194,11 @@ body.halloween-selected .hero-space:after{background:linear-gradient(115deg,tran
 .halloween-accordion{margin-top:12px;overflow:hidden;border:1px solid rgba(255,140,53,.25);border-radius:12px;background:linear-gradient(145deg,rgba(36,19,27,.9),rgba(12,11,20,.98))}.halloween-accordion>summary{display:flex;align-items:center;gap:10px;padding:14px;min-height:52px;cursor:pointer;list-style:none;color:#ffca91;font-size:12px;font-weight:800}.halloween-accordion>summary::-webkit-details-marker{display:none}.halloween-accordion>summary span{margin-left:auto;color:#b7a4b6;font-size:10px;font-weight:500}.halloween-accordion>summary b{font-size:17px;transition:transform .2s}.halloween-accordion[open]>summary b{transform:rotate(180deg)}.halloween-accordion-content{display:grid;gap:8px;padding:0 10px 10px;border-top:1px solid rgba(255,140,53,.13)}.halloween-accordion-content .halloween-boost,.halloween-accordion-content .halloween-mission{margin-top:8px}.halloween-mission-group>summary{background:linear-gradient(90deg,rgba(255,113,35,.08),transparent)}.halloween-mission .bar i{background:linear-gradient(90deg,#ff6b27,#ffc66d)}.halloween-boost button{min-width:80px}.halloween-layout{grid-template-columns:1fr}
 @media(max-width:760px){.halloween-candy-click{left:calc(50% + 79px);bottom:25px;width:88px;height:88px}.halloween-candy-click span{font-size:25px}.halloween-candy-click b{font-size:8px}.halloween-candy-click small{font-size:8px}.halloween-colony-banner{align-items:flex-start;flex-direction:column;padding:14px}.halloween-colony-banner h3{font-size:18px}.halloween-accordion>summary{gap:7px;padding:12px;font-size:10px}.halloween-accordion>summary span{font-size:8px}}
 
-
-/* Mobile UI fix: hide verbose sync labels that overflow the header/account card. */
+/* HOTFIX mobile: hide verbose cloud-sync labels that overflow the account chip */
 #headerSyncLabel { display: none !important; }
-@media (max-width: 700px) {
-  #cloudStatus, #syncLast, #syncCardTitle { display: none !important; }
-  .sync-card > div { display: none !important; }
-  .sync-card { min-height: 0 !important; padding: 8px !important; align-items: center !important; }
-}
+/* The account chip keeps the status dot and account name, but no second line. */
+.account-chip { row-gap: 0 !important; }
+/* Hide changing sync status copy in the account panel; keep manual sync button and cloud logic intact. */
+#cloudStatus, #syncLast, #syncCardTitle { display: none !important; }
+.sync-card { align-items: center !important; min-height: 44px; }
+.sync-card > div { display: none !important; }
