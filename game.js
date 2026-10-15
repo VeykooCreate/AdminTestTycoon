@@ -48,6 +48,94 @@ const GALAXY_BUILDINGS=[
 for(let g=1;g<3;g++)EXTRA_WORLDS[g-1].forEach((p,i)=>WORLDS.push([p[0],p[1],WORLDS[g*32-1][2]*Math.pow(1e50,g),WORLDS[i][3]*Math.pow(10,g)]));
 
 
+
+// Halloween limited-time event: available through November 1, 2026 (French local time).
+const HALLOWEEN_END = Date.parse('2026-11-02T00:00:00+01:00');
+const HALLOWEEN_PLANETS = [
+ {icon:'🎃',name:'Citrouille Nova',desc:'Un monde orange baigné de brume',scale:1.0,buildings:[['🍬','Confiserie lunaire',1,12],['🕯️','Mine à citrouilles',1,30],['🧙','Atelier de sorcière',1,80],['🕸️','Tisseur de sucre',1,210]]},
+ {icon:'👻',name:'Brume des Fantômes',desc:'Des spectres récoltent des bonbons',scale:1.8,buildings:[['👻','Récolteur spectral',1,24],['🪦','Cimetière gourmand',1,60],['🦇','Nid de chauves-souris',1,160],['🔮','Cristalliseur d’ectoplasme',1,420]]},
+ {icon:'🕷️',name:'Toile d’Obsidienne',desc:'Des araignées tissent du sucre noir',scale:3.2,buildings:[['🕷️','Tisseur arachnide',1,48],['🕸️','Filature de caramel',1,120],['🪲','Élevage de scarabées',1,320],['🕯️','Lanterne ensorcelée',1,850]]},
+ {icon:'🧛',name:'Château de Minuit',desc:'Les vampires gardent les réserves',scale:5.5,buildings:[['🦇','Domaine des vampires',1,95],['🧛','Comptoir sanguisucre',1,240],['⚰️','Coffre funéraire',1,640],['🌙','Four lunaire',1,1700]]},
+ {icon:'🧪',name:'Marais des Potions',desc:'Des élixirs transforment les friandises',scale:9,buildings:[['🧪','Distillerie de potions',1,180],['🍭','Cuve de sucettes',1,460],['🐸','Laboratoire des crapauds',1,1200],['☠️','Réacteur toxique',1,3200]]},
+ {icon:'💀',name:'Catacombes Sucrées',desc:'Une ancienne civilisation de bonbons',scale:15,buildings:[['💀','Mine de sucre fossile',1,350],['🦴','Broyeur d’os en sucre',1,900],['⚱️','Crypte confiserie',1,2400],['🪬','Totem maudit',1,6500]]},
+ {icon:'🧟',name:'Jardin des Revenants',desc:'Des cultures étranges poussent dans la nuit',scale:25,buildings:[['🧟','Ferme des revenants',1,700],['🌱','Serre citrouille',1,1800],['🪴','Jardin carnivore',1,5000],['🧬','Mutateur de friandises',1,13500]]},
+ {icon:'🐈‍⬛',name:'Lune des Sorcières',desc:'Des familiers gardent les chaudrons',scale:42,buildings:[['🐈‍⬛','Sanctuaire des familiers',1,1400],['🧹','Usine de balais',1,3800],['🧙','Académie occulte',1,10500],['🌑','Collecteur d’ombre',1,28000]]},
+ {icon:'🔥',name:'Fournaise des Bonbons',desc:'Une étoile forge des friandises explosives',scale:70,buildings:[['🔥','Four à caramel',1,3000],['💣','Fonderie de bonbons',1,8000],['🌋','Volcan de chocolat',1,22000],['⚡','Convertisseur d’énergie sucrée',1,60000]]},
+ {icon:'👑',name:'Trône du Cauchemar',desc:'Le cœur de la galaxie d’Halloween',scale:120,buildings:[['👑','Palais du Roi Citrouille',1,7500],['🐉','Dragon confiseur',1,20000],['🌀','Portail des friandises',1,55000],['🌌','Noyau du cauchemar',1,150000]]}
+];
+const HALLOWEEN_BOOSTS = {
+ candy5: {name:'Rush sucré',icon:'🍬',desc:'Production de crédits ×5 pendant 1 heure',cost:45000,duration:3600000,mult:5},
+ candy2: {name:'Énergie spectrale',icon:'👻',desc:'Production de crédits ×2 pendant 2 heures',cost:12000,duration:7200000,mult:2},
+ candy10: {name:'Faveur de la sorcière',icon:'🧙',desc:'+10 % de production pendant 4 heures',cost:9000,duration:14400000,mult:1.1},
+ candy25: {name:'Bénédiction lunaire',icon:'🌕',desc:'+25 % de production pendant 2 heures',cost:18000,duration:7200000,mult:1.25},
+ candyClick: {name:'Main fantomatique',icon:'🖐️',desc:'Puissance de clic ×3 pendant 1 heure',cost:7000,duration:3600000,clickMult:3}
+};
+function halloweenActive(){return Date.now()<HALLOWEEN_END;}
+function halloweenEnsure(){
+ if(!state.halloween||typeof state.halloween!=='object')state.halloween={};
+ const h=state.halloween;
+ h.candies=Math.max(0,Number(h.candies)||0);
+ h.planet=Math.max(0,Math.min(9,Math.floor(Number(h.planet)||0)));
+ h.buildings=h.buildings&&typeof h.buildings==='object'?h.buildings:{};
+ h.boosts=h.boosts&&typeof h.boosts==='object'?h.boosts:{};
+ for(let p=0;p<10;p++)for(let b=0;b<4;b++){const k=p+'-'+b;h.buildings[k]=Math.max(0,Math.floor(Number(h.buildings[k])||0));}
+ for(const [id,boost] of Object.entries(h.boosts)){if(!boost||typeof boost!=='object')delete h.boosts[id];}
+}
+function halloweenRate(){
+ if(!halloweenActive())return 0;
+ halloweenEnsure();
+ let rate=0;
+ HALLOWEEN_PLANETS.forEach((planet,p)=>planet.buildings.forEach((b,i)=>{rate+=(state.halloween.buildings[p+'-'+i]||0)*b[3]*planet.scale;}));
+ return rate;
+}
+function halloweenBoostMult(kind='prod'){
+ if(!state.halloween?.boosts)return 1;
+ const now=Date.now();let m=1;
+ for(const [id,entry] of Object.entries(state.halloween.boosts)){
+  const def=HALLOWEEN_BOOSTS[id];if(!def||Number(entry.until)<=now)continue;
+  if(kind==='click'&&def.clickMult)m*=def.clickMult;
+  else if(kind==='prod'&&def.mult)m*=def.mult;
+ }
+ return m;
+}
+function halloweenBuyBuilding(index){
+ if(!halloweenActive())return;
+ halloweenEnsure();const p=state.halloween.planet,b=HALLOWEEN_PLANETS[p].buildings[index];if(!b)return;
+ const key=p+'-'+index,level=state.halloween.buildings[key]||0;
+ const cost=Math.ceil(b[3]*18*Math.pow(1.72,level));
+ if(state.halloween.candies<cost){toast('Pas assez de bonbons !');return;}
+ state.halloween.candies-=cost;state.halloween.buildings[key]=level+1;save();render();toast(b[1]+' amélioré !');
+}
+function halloweenBuyBoost(id){
+ if(!halloweenActive())return;
+ halloweenEnsure();const def=HALLOWEEN_BOOSTS[id];if(!def)return;
+ const now=Date.now(),existing=state.halloween.boosts[id],until=Math.max(now,Number(existing?.until)||0);
+ if(state.halloween.candies<def.cost){toast('Pas assez de bonbons !');return;}
+ state.halloween.candies-=def.cost;
+ state.halloween.boosts[id]={until:until+def.duration};
+ save();render();toast(def.name+' activé !');
+}
+function renderHalloween(){
+ const root=document.getElementById('halloweenEventRoot');if(!root)return;
+ const active=halloweenActive();
+ root.hidden=!active;
+ if(!active){document.body.classList.remove('halloween-season','halloween-view');return;}
+ document.body.classList.add('halloween-season');
+ const h=state.halloween;halloweenEnsure();
+ if(!halloweenView){document.body.classList.remove('halloween-view');root.innerHTML=`<button class="halloween-galaxy-card" data-halloween-enter><span class="halloween-card-art">🎃</span><span class="halloween-card-copy"><strong>GALAXIE D’HALLOWEEN</strong><small>ÉVÉNEMENT LIMITÉ · 10 PLANÈTES · BONBONS & BOOSTS</small><em>Explore la galaxie avant le 1er novembre !</em></span><span class="halloween-card-action">EXPLORER ↗</span></button>`;return;}
+ document.body.classList.add('halloween-view');
+ const p=h.planet,planet=HALLOWEEN_PLANETS[p];
+ const planets=HALLOWEEN_PLANETS.map((x,i)=>`<button class="halloween-planet ${i===p?'active':''}" data-halloween-planet="${i}"><span>${x.icon}</span><b>${String(i+1).padStart(2,'0')} · ${x.name}</b><small>Production ×${x.scale}</small></button>`).join('');
+ const buildings=planet.buildings.map((b,i)=>{const level=h.buildings[p+'-'+i]||0,cost=Math.ceil(b[3]*18*Math.pow(1.72,level)),rate=b[3]*planet.scale*Math.pow(1.72,level);return `<article class="halloween-building"><span class="hb-icon">${b[0]}</span><div class="hb-info"><b>${b[1]}</b><small>Niveau ${level} · +${fmt(rate)} bonbons/s</small><em>Coût : 🍬 ${fmt(cost)}</em></div><button data-hallow-buy="${i}" ${h.candies<cost?'disabled':''}>AMÉLIORER</button></article>`}).join('');
+ const boosts=Object.entries(HALLOWEEN_BOOSTS).map(([id,b])=>{const left=Math.max(0,Number(h.boosts[id]?.until||0)-Date.now());return `<article class="halloween-boost"><span>${b.icon}</span><div><b>${b.name}</b><small>${b.desc}</small>${left?`<em>Actif · ${Math.ceil(left/60000)} min restantes</em>`:''}</div><button data-hallow-boost="${id}" ${h.candies<b.cost?'disabled':''}>🍬 ${fmt(b.cost)}</button></article>`}).join('');
+ root.innerHTML=`<div class="halloween-event-head"><button class="halloween-back" data-halloween-exit>← RETOUR AUX GALAXIES</button><div><small>ÉVÉNEMENT TEMPORAIRE · JUSQU’AU 1ER NOVEMBRE</small><h3>🎃 Galaxie d’Halloween</h3><p>Récolte des bonbons et échange-les contre des boosts pour ta progression principale.</p></div><div class="halloween-candy-wallet"><span>🍬</span><b>${fmt(h.candies)}</b><small>+${fmt(halloweenRate())}/s</small></div></div><div class="halloween-planet-grid">${planets}</div><div class="halloween-layout"><section class="halloween-panel"><div class="halloween-section-title"><span>${planet.icon}</span><div><h3>${planet.name}</h3><p>${planet.desc}</p></div></div><div class="halloween-building-list">${buildings}</div></section><section class="halloween-panel halloween-shop"><div class="halloween-section-title"><span>🧪</span><div><h3>Boutique des maléfices</h3><p>Des boosts temporaires pour ton compte principal.</p></div></div>${boosts}</section></div>`;
+}
+function halloweenTick(){
+ if(!halloweenActive())return;
+ halloweenEnsure();const gain=halloweenRate()/4;
+ if(gain>0)state.halloween.candies+=gain;
+}
+
 const PLANET_THEMES=[
  'Nova','Martienne','Saturnienne','Azur','Singulière','Hélios','Dimensionnelle','Néxienne','Cristalline','Oortienne','Oméga','Universelle',
  'Vesperienne','Éclipse','Aethérienne','Cristallienne','Stellaire','Primordiale','Némésienne','Titanienne','Orageuse','Spectrale','Pulsar','Cométaire',
@@ -278,7 +366,7 @@ let state=load();
 let selectedWorld=Math.max(0,Math.min(WORLDS.length-1,Number(localStorage.getItem('sm-v2-world')??state.activeWorld??0)));
 if(Math.floor(selectedWorld/32)>=(state.galaxiesUnlocked||1))selectedWorld=Math.max(0,((state.galaxiesUnlocked||1)-1)*32);
 state.activeWorld=selectedWorld;
-let screen='control';let missionTab='daily';let accountBusy=false;
+let screen='control';let missionTab='daily';let accountBusy=false;let halloweenView=false;
 const ADMIN_EMAIL='ojdshfihjgsdsdklfhsdjhf@gmail.com';
 let adminVerified=false;
 const ACCOUNT_CREATED_KEY='space-mining-account-created';
@@ -290,7 +378,7 @@ function dismissAccountReminder(){accountReminderDismissed=true;closeAccountRemi
 
 function fresh(){
  const buildings={};WORLDS.forEach((_,w)=>BUILDING_ROLES.forEach((_,b)=>buildings[w+'-'+b]=0));
- return {money:0,runTotal:0,lifetimeTotal:0,prestige:0,crystals:0,ascensionPoints:0,galaxiesUnlocked:1,ascensionUpgrades:{},buildings,research:{},xp:0,level:1,clicks:0,spent:0,activeWorld:0,
+ return {money:0,runTotal:0,lifetimeTotal:0,prestige:0,crystals:0,ascensionPoints:0,galaxiesUnlocked:1,ascensionUpgrades:{},halloween:{candies:0,planet:0,buildings:{},boosts:{}},buildings,research:{},xp:0,level:1,clicks:0,spent:0,activeWorld:0,
 daily:{key:dateKey(),claimed:[],base:{clicks:0,lifetime:0,spent:0,buildings:0}},
 weekly:{key:weekKey(),claimed:[],base:{clicks:0,lifetime:0,run:0,spent:0,buildings:0,tech:0,world:1}},
 campaignClaimed:[],
@@ -305,7 +393,7 @@ z.campaignClaimed=Array.isArray(z.campaignClaimed)?z.campaignClaimed:[];
 z.achievements=Array.isArray(z.achievements)?z.achievements:[];
 z.achievementClaimed=Array.isArray(z.achievementClaimed)?z.achievementClaimed:[...z.achievements];
 z.clickStreak=Number(z.clickStreak)||0;z.lastClickAt=Number(z.lastClickAt)||0;z.clickMilestones=Number(z.clickMilestones)||0;
-z.event=Object.assign({id:null,activeUntil:0,nextAt:0},z.event||{});
+z.event=Object.assign({id:null,activeUntil:0,nextAt:0},z.event||{});z.halloween=Object.assign({candies:0,planet:0,buildings:{},boosts:{}},z.halloween||{});
 z.offlineLast=Number(z.offlineLast)||0;
 z.lastAt=Number(z.lastAt)||Date.now();
  z.activeWorld=Math.max(0,Math.min(WORLDS.length-1,Math.floor(Number(z.activeWorld)||0)));
@@ -344,8 +432,8 @@ function cost(w,b){
 }
 function prestigeMult(){return 1+.18*state.prestige}
 function techOwned(id){return !!state.research[id]}
-function prodMult(){let m=(1+state.prestige*.18)*(1+.25*(Number(state.ascensionUpgrades?.production)||0));for(const br of BRANCH_ORDER)BRANCHES[br].forEach(t=>{if(techOwned(t[0])&&['automation','energy'].includes(br))m*=br==='automation'?1.25:1.2});if(techOwned('singularityAI'))m*=10;if(techOwned('zeroPoint'))m*=10;return m}
-function clickPower(){let m=100*prestigeMult()*(1+.25*(Number(state.ascensionUpgrades?.click)||0));if(techOwned('laser'))m*=1.5;if(techOwned('plasma'))m*=1.8;if(techOwned('abyss'))m*=2;if(techOwned('stellar'))m*=3;if(techOwned('voidmine'))m*=5;if(techOwned('overdrive'))m*=10;return m*eventMult('click')*eventMult('income')}
+function prodMult(){let m=(1+state.prestige*.18)*(1+.25*(Number(state.ascensionUpgrades?.production)||0))*halloweenBoostMult('prod');for(const br of BRANCH_ORDER)BRANCHES[br].forEach(t=>{if(techOwned(t[0])&&['automation','energy'].includes(br))m*=br==='automation'?1.25:1.2});if(techOwned('singularityAI'))m*=10;if(techOwned('zeroPoint'))m*=10;return m}
+function clickPower(){let m=100*prestigeMult()*(1+.25*(Number(state.ascensionUpgrades?.click)||0));if(techOwned('laser'))m*=1.5;if(techOwned('plasma'))m*=1.8;if(techOwned('abyss'))m*=2;if(techOwned('stellar'))m*=3;if(techOwned('voidmine'))m*=5;if(techOwned('overdrive'))m*=10;return m*eventMult('click')*eventMult('income')*halloweenBoostMult('click')}
 function baseProd(w,b){
  const galaxy=Math.floor(w/32),local=w%32;
  if(galaxy===0&&local===0&&b<4)return [20,75,280,1050][b];
@@ -376,7 +464,7 @@ function render(){
  set('buildingCount',totalBuildings());set('sectorProgress',WORLDS.filter((_,i)=>worldUnlocked(i)).length+' / '+WORLDS.length);set('techProgress',Object.keys(state.research).length);set('missionProgress',CAMPAIGN.filter(m=>missionValue(m)>=m[3]).length);set('buildingSector',WORLDS[selectedWorld][1]);set('sectorCount',WORLDS.filter((_,i)=>worldUnlocked(i)).length+' / '+WORLDS.length);set('techCount',Object.values(BRANCHES).reduce((a,b)=>a+b.length,0)+' technologies');
  set('missionCount',CAMPAIGN.filter(m=>missionValue(m)>=m[3]).length+' / '+CAMPAIGN.length+' · '+state.achievements.length+'/'+ACHIEVEMENTS.length+' succès');
  set('clickStreak','Série : '+state.clickStreak);set('nextClickBonus',((Math.floor(state.clicks/100)+1)*100-state.clicks)+' clics');set('sectorBonus','×'+worldFactor(selectedWorld).toFixed(2));set('comboValue',Math.min(3,1+Math.floor(state.clickStreak/10)));const ch=document.getElementById('comboHud');if(ch)ch.hidden=state.clickStreak<2;const ev=activeEvent();set('eventStrip',ev?`${ev[2]} ${ev[1]} · ${ev[3]} · encore ${Math.max(1,Math.ceil((state.event.activeUntil-Date.now())/60000))} min`:'Aucun phénomène détecté.');
- renderBuildings();renderMap();renderTech();renderMissions();renderDailyPreview();renderPrestige();renderAccount();renderNavAlerts();
+ renderBuildings();renderMap();renderHalloween();renderTech();renderMissions();renderDailyPreview();renderPrestige();renderAccount();renderNavAlerts();
 }
 function renderBuildings(){
  const box=document.getElementById('buildingList');if(!box)return;const w=WORLDS[selectedWorld];
@@ -385,6 +473,12 @@ function renderBuildings(){
 }
 function renderMap(){
  const box=document.getElementById('galaxyMap');const selector=document.getElementById('galaxySelector');if(!box||!selector)return;
+ const detail=document.getElementById('sectorDetail');
+ if(halloweenView&&halloweenActive()){
+  selector.hidden=true;box.hidden=true;if(detail)detail.hidden=true;
+  renderHalloween();return;
+ }
+ selector.hidden=false;box.hidden=false;if(detail)detail.hidden=false;
  // Force le sélecteur comme frère direct de la carte, avant elle. Cela répare aussi
  // les anciennes versions de index.html où le sélecteur était imbriqué dans la carte.
  if(selector.parentElement!==box.parentElement || selector.nextElementSibling!==box){box.parentElement.insertBefore(selector,box);}
@@ -662,8 +756,8 @@ function prestige(){
  save();toast('Ascension réussie · bonus permanents conservés');render();
 }
 
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.adminAction){runAdminAction(b.dataset.adminAction);return;}if(b.id==='reminderLater'){dismissAccountReminder();return}if(b.id==='reminderCreateAccount'||b.id==='reminderLoginAccount'){closeAccountReminder();nav('account');document.getElementById('emailInput')?.focus({preventScroll:true});return}if(b.dataset.nav){nav(b.dataset.nav);return}if(b.dataset.ascUpgrade){buyAscensionUpgrade(b.dataset.ascUpgrade);return}if(b.dataset.galaxy!==undefined){const g=Number(b.dataset.galaxy);if(g<state.galaxiesUnlocked){selectedWorld=g*32;state.activeWorld=selectedWorld;localStorage.setItem('sm-v2-world',selectedWorld);save();render()}return}if(b.id==='mineBtn'){mine();return}if(b.dataset.buy!==undefined){buyBuilding(Number(b.dataset.buy));return}if(b.dataset.tech){buyTech(b.dataset.tech);return}if(b.dataset.quest){claimQuest(b.dataset.quest,b.dataset.questLevel);return}if(b.dataset.claim){claim(b.dataset.claim,b.dataset.claimType);return}if(b.dataset.achievement){claimAchievement(b.dataset.achievement);return}if(b.dataset.mtab){missionTab=b.dataset.mtab;document.querySelectorAll('[data-mtab]').forEach(x=>x.classList.toggle('active',x===b));renderMissions();return}if(b.id==='prestigeBtn'){prestige();return}if(b.id==='createAccount'){createAccount();return}if(b.id==='loginAccount'){loginAccount();return}if(b.id==='logoutAccount'){logout();return}if(b.id==='recoverPassword'){recoverPassword();return}if(b.id==='saveNewPassword'){saveNewPassword();return}if(b.id==='cancelPasswordRecovery'){passwordRecoveryMode=false;renderAccount();return}if(b.id==='forceSync'){syncCloud(true).then(ok=>{if(ok)toast('☁️ Sauvegarde synchronisée')});return}});
-setInterval(()=>{ensureDaily();ensureWeekly();ensureQuests();checkEvent();checkAchievements();if(state.clickStreak&&Date.now()-state.lastClickAt>2200){state.clickStreak=0;}const passiveGain=autoRate()/4;if(passiveGain>0){earn(passiveGain);save(true)}else save(false);if(document.visibilityState==='visible')render();},250);
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-halloween-enter')){if(!halloweenActive())return;halloweenView=true;state.halloween.planet=Math.max(0,Math.min(9,Number(state.halloween.planet)||0));render();return;}if(b.hasAttribute('data-halloween-exit')){halloweenView=false;render();return;}if(b.dataset.halloweenPlanet!==undefined){state.halloween.planet=Math.max(0,Math.min(9,Number(b.dataset.halloweenPlanet)||0));save();render();return;}if(b.dataset.hallowBuy!==undefined){halloweenBuyBuilding(Number(b.dataset.hallowBuy));return;}if(b.dataset.hallowBoost){halloweenBuyBoost(b.dataset.hallowBoost);return;}if(b.dataset.adminAction){runAdminAction(b.dataset.adminAction);return;}if(b.id==='reminderLater'){dismissAccountReminder();return}if(b.id==='reminderCreateAccount'||b.id==='reminderLoginAccount'){closeAccountReminder();nav('account');document.getElementById('emailInput')?.focus({preventScroll:true});return}if(b.dataset.nav){nav(b.dataset.nav);return}if(b.dataset.ascUpgrade){buyAscensionUpgrade(b.dataset.ascUpgrade);return}if(b.dataset.galaxy!==undefined){const g=Number(b.dataset.galaxy);if(g<state.galaxiesUnlocked){selectedWorld=g*32;state.activeWorld=selectedWorld;localStorage.setItem('sm-v2-world',selectedWorld);save();render()}return}if(b.id==='mineBtn'){mine();return}if(b.dataset.buy!==undefined){buyBuilding(Number(b.dataset.buy));return}if(b.dataset.tech){buyTech(b.dataset.tech);return}if(b.dataset.quest){claimQuest(b.dataset.quest,b.dataset.questLevel);return}if(b.dataset.claim){claim(b.dataset.claim,b.dataset.claimType);return}if(b.dataset.achievement){claimAchievement(b.dataset.achievement);return}if(b.dataset.mtab){missionTab=b.dataset.mtab;document.querySelectorAll('[data-mtab]').forEach(x=>x.classList.toggle('active',x===b));renderMissions();return}if(b.id==='prestigeBtn'){prestige();return}if(b.id==='createAccount'){createAccount();return}if(b.id==='loginAccount'){loginAccount();return}if(b.id==='logoutAccount'){logout();return}if(b.id==='recoverPassword'){recoverPassword();return}if(b.id==='saveNewPassword'){saveNewPassword();return}if(b.id==='cancelPasswordRecovery'){passwordRecoveryMode=false;renderAccount();return}if(b.id==='forceSync'){syncCloud(true).then(ok=>{if(ok)toast('☁️ Sauvegarde synchronisée')});return}});
+setInterval(()=>{ensureDaily();ensureWeekly();ensureQuests();halloweenTick();checkEvent();checkAchievements();if(state.clickStreak&&Date.now()-state.lastClickAt>2200){state.clickStreak=0;}const passiveGain=autoRate()/4;if(passiveGain>0){earn(passiveGain);save(true)}else save(false);if(document.visibilityState==='visible')render();},250);
 setInterval(()=>{if(state.account)syncCloud(false)},60000);
 if(sb){sb.auth.onAuthStateChange((_event,session)=>{adminVerified=String(session?.user?.email||'').toLowerCase()===ADMIN_EMAIL&&String(session?.user?.id||'')===String(state.account?.userId||'');renderAccount()});verifyAdminSession().then(()=>renderAccount())}
 window.addEventListener('online',()=>{if(state.account){cloudLastError='';cloudRetryAt=0;setCloudMessage('Connexion rétablie · synchronisation en cours.');syncCloud(true)}});

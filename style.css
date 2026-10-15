@@ -106,3 +106,79 @@
 .mission-ready{border-color:rgba(255,88,108,.3)}
 .mission-head .quest-ready-dot{margin-right:5px}
 @media(max-width:760px){.tech-tree{grid-template-columns:1fr;gap:8px}.tech-accordion>summary,.mission-group>summary{min-height:53px;padding:12px}.tech-accordion .tech-chain{grid-template-columns:1fr;gap:7px}.tech-accordion[open] .tech-chain{padding:0 9px 9px}.tech-node{margin:0;padding:11px}.tech-node strong{font-size:10px}.tech-node small{min-height:0;font-size:8px}.mission-group-content{padding:0 8px 3px}.mission-group>summary b{font-size:10px}.mission-group>summary small{font-size:8px}}
+
+
+/* HALLOWEEN LIMITED EVENT — seasonal orange/purple theme */
+.halloween-event-root[hidden], [hidden].halloween-event-root{display:none!important}
+body.halloween-season{
+ --cyan:#ffb15c;--blue:#ff7b32;--green:#b6e66e;--gold:#ffcb70;
+ background:
+ radial-gradient(ellipse at 4% 0%,rgba(255,104,28,.14),transparent 28%),
+ radial-gradient(ellipse at 96% 8%,rgba(117,48,150,.17),transparent 31%),
+ linear-gradient(180deg,#100a10 0%,#090811 60%,#05060c 100%);
+}
+body.halloween-season .topbar{border-bottom-color:rgba(255,143,54,.25)}
+body.halloween-season .brand-mark{border-color:rgba(255,145,61,.55);color:#ff9d45;box-shadow:0 0 28px rgba(255,105,31,.16)}
+body.halloween-season .screen-head small{color:#ffae63}
+body.halloween-season .screen-head h2{ text-shadow:0 0 22px rgba(255,105,31,.18)}
+body.halloween-season #app{position:relative}
+body.halloween-season #app:before,body.halloween-season #app:after{
+ content:"";position:fixed;top:0;width:112px;height:128px;pointer-events:none;z-index:48;opacity:.35;
+ background:
+ radial-gradient(ellipse at 0 0,transparent 25px,rgba(255,148,76,.75) 26px,transparent 27px),
+ repeating-radial-gradient(ellipse at 0 0,transparent 0 10px,rgba(255,148,76,.38) 11px 12px,transparent 13px 20px);
+ mask-image:linear-gradient(135deg,#000,transparent 78%);
+}
+body.halloween-season #app:before{left:0}
+body.halloween-season #app:after{right:0;transform:scaleX(-1)}
+.halloween-event-root{margin:0 0 18px}
+.halloween-galaxy-card{
+ width:100%;display:flex;align-items:center;gap:18px;text-align:left;position:relative;overflow:hidden;
+ padding:18px 22px;border:1px solid rgba(255,142,58,.62);border-radius:17px;cursor:pointer;
+ background:
+ radial-gradient(ellipse at 5% 50%,rgba(255,100,24,.23),transparent 42%),
+ radial-gradient(ellipse at 95% 20%,rgba(126,49,153,.25),transparent 38%),
+ linear-gradient(115deg,rgba(41,20,25,.98),rgba(13,14,28,.98));
+ box-shadow:0 0 0 1px rgba(255,141,56,.08) inset,0 12px 36px rgba(0,0,0,.25);
+ transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.halloween-galaxy-card:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.45;background:repeating-linear-gradient(115deg,transparent 0 32px,rgba(255,144,59,.08) 33px 34px,transparent 35px 68px)}
+.halloween-galaxy-card:hover{transform:translateY(-2px);border-color:#ffc07b;box-shadow:0 0 28px rgba(255,103,34,.18)}
+.halloween-card-art{flex:0 0 58px;width:58px;height:58px;display:grid;place-items:center;border-radius:15px;font-size:34px;background:linear-gradient(145deg,rgba(255,125,41,.23),rgba(103,54,128,.25));border:1px solid rgba(255,165,84,.3);filter:drop-shadow(0 0 12px rgba(255,99,27,.24))}
+.halloween-card-copy{display:grid;gap:5px;position:relative;min-width:0}
+.halloween-card-copy strong{font-size:14px;letter-spacing:1.7px;color:#ffbd7b}
+.halloween-card-copy small{font-size:9px;letter-spacing:1.1px;color:#d6a5c5}
+.halloween-card-copy em{font-size:11px;color:#b3bbcd;font-style:normal}
+.halloween-card-action{margin-left:auto;white-space:nowrap;font-size:10px;font-weight:800;letter-spacing:1px;color:#160d10;background:linear-gradient(100deg,#ffb25c,#ff7334);padding:12px 15px;border-radius:9px;position:relative}
+body.halloween-view .halloween-event-root{margin-bottom:20px}
+.halloween-event-head{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:22px;border:1px solid rgba(255,135,51,.3);border-radius:16px;background:radial-gradient(ellipse at 0 0,rgba(255,99,29,.2),transparent 55%),linear-gradient(120deg,#1b1018,#0d1220);margin-bottom:14px}
+.halloween-back{grid-column:1/-1;justify-self:start;border:1px solid rgba(255,160,86,.3);border-radius:8px;padding:8px 11px;background:rgba(255,255,255,.03);color:#ffbd7b;font-size:10px;font-weight:800;cursor:pointer}
+.halloween-event-head>div:nth-child(2) small{font-size:9px;letter-spacing:1.3px;color:#ff9c52}
+.halloween-event-head h3{margin:6px 0;font-size:clamp(20px,3vw,30px);color:#fff0df}
+.halloween-event-head p{margin:0;color:#aeb7c7;font-size:12px;line-height:1.5}
+.halloween-candy-wallet{min-width:125px;text-align:center;display:grid;gap:4px;padding:14px;border:1px solid rgba(255,166,69,.28);border-radius:13px;background:rgba(255,139,42,.08)}
+.halloween-candy-wallet span{font-size:24px}.halloween-candy-wallet b{font-size:20px;color:#ffc071}.halloween-candy-wallet small{color:#a8e68b;font-size:10px}
+.halloween-planet-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-bottom:15px}
+.halloween-planet{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;min-height:100px;padding:12px 7px;border:1px solid #34273a;border-radius:12px;background:linear-gradient(145deg,#131321,#0b0d17);cursor:pointer}
+.halloween-planet>span{font-size:25px;filter:drop-shadow(0 0 8px rgba(255,118,47,.25))}
+.halloween-planet b{font-size:10px;text-align:center;color:#e7e8f3}
+.halloween-planet small{font-size:9px;color:#b88bb4;text-align:center}
+.halloween-planet.active{border-color:#ff9c49;box-shadow:0 0 0 1px rgba(255,156,73,.18) inset,0 0 22px rgba(255,102,38,.12);background:linear-gradient(145deg,#291922,#101020)}
+.halloween-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:14px}
+.halloween-panel{min-width:0;padding:16px;border:1px solid rgba(153,126,160,.2);border-radius:15px;background:linear-gradient(145deg,rgba(18,18,31,.97),rgba(9,12,22,.98))}
+.halloween-section-title{display:flex;gap:12px;align-items:center;margin-bottom:13px}
+.halloween-section-title>span{font-size:28px}.halloween-section-title h3{margin:0 0 4px;font-size:15px;color:#ffbd7b}.halloween-section-title p{margin:0;color:#9aa8bb;font-size:11px;line-height:1.4}
+.halloween-building-list,.halloween-shop{display:grid;gap:8px}
+.halloween-building,.halloween-boost{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid rgba(123,140,168,.17);border-radius:11px;background:rgba(255,255,255,.018)}
+.hb-icon,.halloween-boost>span{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:10px;background:rgba(255,132,49,.09);font-size:22px}
+.hb-info,.halloween-boost>div{display:grid;gap:4px;min-width:0;flex:1}
+.hb-info b,.halloween-boost b{font-size:11px;color:#e9edf7}.hb-info small,.halloween-boost small{font-size:10px;color:#9ba9bb;line-height:1.35}.hb-info em,.halloween-boost em{font-size:10px;color:#ffbd7b;font-style:normal}
+.halloween-building button,.halloween-boost button{flex:0 0 auto;border:1px solid rgba(255,147,63,.38);border-radius:8px;padding:9px 10px;background:linear-gradient(120deg,rgba(255,141,53,.2),rgba(139,74,143,.15));color:#ffd0a0;font-size:9px;font-weight:850;cursor:pointer}
+.halloween-building button:disabled,.halloween-boost button:disabled{opacity:.38;cursor:not-allowed}
+.halloween-shop{align-content:start}
+@media(max-width:760px){
+ .halloween-galaxy-card{padding:13px;gap:10px}.halloween-card-art{flex-basis:42px;width:42px;height:42px;font-size:27px}.halloween-card-copy strong{font-size:11px;letter-spacing:1px}.halloween-card-copy small{font-size:8px;line-height:1.4}.halloween-card-action{font-size:8px;padding:10px 8px}
+ .halloween-event-head{padding:15px}.halloween-planet-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.halloween-planet{min-height:86px}
+ .halloween-layout{grid-template-columns:1fr}.halloween-candy-wallet{min-width:95px;padding:10px}.halloween-event-head p{font-size:11px}
+ .halloween-building,.halloween-boost{gap:7px;padding:8px}.hb-info b,.halloween-boost b{font-size:10px}.halloween-building button,.halloween-boost button{font-size:8px;padding:8px 7px}
+}
