@@ -193,3 +193,15 @@ body.halloween-selected .hero-space:after{background:linear-gradient(115deg,tran
 .halloween-planet.locked{opacity:.5;filter:saturate(.5);cursor:not-allowed;border-style:dashed}.halloween-planet:disabled{cursor:not-allowed}
 .halloween-accordion{margin-top:12px;overflow:hidden;border:1px solid rgba(255,140,53,.25);border-radius:12px;background:linear-gradient(145deg,rgba(36,19,27,.9),rgba(12,11,20,.98))}.halloween-accordion>summary{display:flex;align-items:center;gap:10px;padding:14px;min-height:52px;cursor:pointer;list-style:none;color:#ffca91;font-size:12px;font-weight:800}.halloween-accordion>summary::-webkit-details-marker{display:none}.halloween-accordion>summary span{margin-left:auto;color:#b7a4b6;font-size:10px;font-weight:500}.halloween-accordion>summary b{font-size:17px;transition:transform .2s}.halloween-accordion[open]>summary b{transform:rotate(180deg)}.halloween-accordion-content{display:grid;gap:8px;padding:0 10px 10px;border-top:1px solid rgba(255,140,53,.13)}.halloween-accordion-content .halloween-boost,.halloween-accordion-content .halloween-mission{margin-top:8px}.halloween-mission-group>summary{background:linear-gradient(90deg,rgba(255,113,35,.08),transparent)}.halloween-mission .bar i{background:linear-gradient(90deg,#ff6b27,#ffc66d)}.halloween-boost button{min-width:80px}.halloween-layout{grid-template-columns:1fr}
 @media(max-width:760px){.halloween-candy-click{left:calc(50% + 79px);bottom:25px;width:88px;height:88px}.halloween-candy-click span{font-size:25px}.halloween-candy-click b{font-size:8px}.halloween-candy-click small{font-size:8px}.halloween-colony-banner{align-items:flex-start;flex-direction:column;padding:14px}.halloween-colony-banner h3{font-size:18px}.halloween-accordion>summary{gap:7px;padding:12px;font-size:10px}.halloween-accordion>summary span{font-size:8px}}
+
+
+/* Header full-width: étend le fond sur tout l’écran sans déplacer les contrôles sur desktop. */
+@media (min-width: 761px){
+  .topbar{
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    padding-left:max(26px,calc((100vw - 1288px)/2));
+    padding-right:max(26px,calc((100vw - 1288px)/2));
+    box-sizing:border-box;
+  }
+}
