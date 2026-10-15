@@ -70,50 +70,55 @@ const HALLOWEEN_PLANETS = [
  {icon:'👑',name:'Trône du Cauchemar',desc:'Le cœur de la galaxie d’Halloween',scale:120,buildings:[['👑','Palais du Roi Citrouille',1,7500],['🐉','Dragon confiseur',1,20000],['🌀','Portail des friandises',1,55000],['🌌','Noyau du cauchemar',1,150000]]}
 ];
 const HALLOWEEN_BOOSTS = {
- candy10:{name:'Étincelle sucrée',icon:'🍭',desc:'+10 % de production pendant 15 min',cost:100,duration:900000,mult:1.1},
- candy15:{name:'Aura de citrouille',icon:'🎃',desc:'+15 % de production pendant 30 min',cost:350,duration:1800000,mult:1.15},
- candyClick2:{name:'Doigts de gobelin',icon:'👹',desc:'Puissance de clic ×2 pendant 20 min',cost:700,duration:1200000,clickMult:2},
- candy25:{name:'Bénédiction lunaire',icon:'🌕',desc:'+25 % de production pendant 45 min',cost:1200,duration:2700000,mult:1.25},
- candyClick3:{name:'Main fantomatique',icon:'🖐️',desc:'Puissance de clic ×3 pendant 30 min',cost:2400,duration:1800000,clickMult:3},
- candy50:{name:'Fournaise hantée',icon:'🔥',desc:'+50 % de production pendant 1 h',cost:4500,duration:3600000,mult:1.5},
- candy2:{name:'Énergie spectrale',icon:'👻',desc:'Production de crédits ×2 pendant 30 min',cost:8000,duration:1800000,mult:2},
- candyClick5:{name:'Griffe du vampire',icon:'🧛',desc:'Puissance de clic ×5 pendant 30 min',cost:13000,duration:1800000,clickMult:5},
- candy75:{name:'Rituel du chaudron',icon:'🧪',desc:'+75 % de production pendant 1 h',cost:20000,duration:3600000,mult:1.75},
- candy3:{name:'Pacte des ombres',icon:'🌑',desc:'Production de crédits ×3 pendant 30 min',cost:30000,duration:1800000,mult:3},
- candyClick8:{name:'Poing du monstre',icon:'👊',desc:'Puissance de clic ×8 pendant 30 min',cost:45000,duration:1800000,clickMult:8},
- candy4:{name:'Tempête d’ectoplasme',icon:'🌀',desc:'Production de crédits ×4 pendant 30 min',cost:65000,duration:1800000,mult:4},
- candy100:{name:'Pleine lune',icon:'🌕',desc:'+100 % de production pendant 2 h',cost:90000,duration:7200000,mult:2},
- candyClick10:{name:'Force du cavalier sans tête',icon:'🐎',desc:'Puissance de clic ×10 pendant 1 h',cost:125000,duration:3600000,clickMult:10},
- candy5:{name:'Rush sucré',icon:'🍬',desc:'Production de crédits ×5 pendant 1 h',cost:175000,duration:3600000,mult:5},
- candy150:{name:'Couronne des sorcières',icon:'👑',desc:'+150 % de production pendant 1 h',cost:250000,duration:3600000,mult:2.5},
- candy6:{name:'Réacteur maudit',icon:'☠️',desc:'Production de crédits ×6 pendant 45 min',cost:350000,duration:2700000,mult:6},
- candyClick15:{name:'Fureur du démon',icon:'😈',desc:'Puissance de clic ×15 pendant 45 min',cost:500000,duration:2700000,clickMult:15},
- candy8:{name:'Singularité d’Halloween',icon:'🕳️',desc:'Production de crédits ×8 pendant 30 min',cost:750000,duration:1800000,mult:8},
- candy10x:{name:'Apocalypse sucrée',icon:'💥',desc:'Production de crédits ×10 pendant 20 min',cost:1200000,duration:1200000,mult:10}
+ candy10:{name:'Étincelle sucrée',icon:'🍭',desc:'+10 % de production pendant 15 min',cost:100000,duration:900000,mult:1.1},
+ candy15:{name:'Aura de citrouille',icon:'🎃',desc:'+15 % de production pendant 30 min',cost:350000,duration:1800000,mult:1.15},
+ candyClick2:{name:'Doigts de gobelin',icon:'👹',desc:'Puissance de clic ×2 pendant 20 min',cost:700000,duration:1200000,clickMult:2},
+ candy25:{name:'Bénédiction lunaire',icon:'🌕',desc:'+25 % de production pendant 45 min',cost:1200000,duration:2700000,mult:1.25},
+ candyClick3:{name:'Main fantomatique',icon:'🖐️',desc:'Puissance de clic ×3 pendant 30 min',cost:2400000,duration:1800000,clickMult:3},
+ candy50:{name:'Fournaise hantée',icon:'🔥',desc:'+50 % de production pendant 1 h',cost:4500000,duration:3600000,mult:1.5},
+ candy2:{name:'Énergie spectrale',icon:'👻',desc:'Production de crédits ×2 pendant 30 min',cost:8000000,duration:1800000,mult:2},
+ candyClick5:{name:'Griffe du vampire',icon:'🧛',desc:'Puissance de clic ×5 pendant 30 min',cost:13000000,duration:1800000,clickMult:5},
+ candy75:{name:'Rituel du chaudron',icon:'🧪',desc:'+75 % de production pendant 1 h',cost:20000000,duration:3600000,mult:1.75},
+ candy3:{name:'Pacte des ombres',icon:'🌑',desc:'Production de crédits ×3 pendant 30 min',cost:30000000,duration:1800000,mult:3},
+ candyClick8:{name:'Poing du monstre',icon:'👊',desc:'Puissance de clic ×8 pendant 30 min',cost:45000000,duration:1800000,clickMult:8},
+ candy4:{name:'Tempête d’ectoplasme',icon:'🌀',desc:'Production de crédits ×4 pendant 30 min',cost:65000000,duration:1800000,mult:4},
+ candy100:{name:'Pleine lune',icon:'🌕',desc:'+100 % de production pendant 2 h',cost:90000000,duration:7200000,mult:2},
+ candyClick10:{name:'Force du cavalier sans tête',icon:'🐎',desc:'Puissance de clic ×10 pendant 1 h',cost:125000000,duration:3600000,clickMult:10},
+ candy5:{name:'Rush sucré',icon:'🍬',desc:'Production de crédits ×5 pendant 1 h',cost:175000000,duration:3600000,mult:5},
+ candy150:{name:'Couronne des sorcières',icon:'👑',desc:'+150 % de production pendant 1 h',cost:250000000,duration:3600000,mult:2.5},
+ candy6:{name:'Réacteur maudit',icon:'☠️',desc:'Production de crédits ×6 pendant 45 min',cost:350000000,duration:2700000,mult:6},
+ candyClick15:{name:'Fureur du démon',icon:'😈',desc:'Puissance de clic ×15 pendant 45 min',cost:500000000,duration:2700000,clickMult:15},
+ candy8:{name:'Singularité d’Halloween',icon:'🕳️',desc:'Production de crédits ×8 pendant 30 min',cost:750000000,duration:1800000,mult:8},
+ candy10x:{name:'Apocalypse sucrée',icon:'💥',desc:'Production de crédits ×10 pendant 20 min',cost:1200000000,duration:1200000,mult:10}
 };
 const HALLOWEEN_MISSIONS = [
- {id:'candies100',name:'Réserve de friandises',desc:'Gagner 100 bonbons au total',goal:100,reward:100,kind:'candies'},
- {id:'candies1k',name:'Sac bien rempli',desc:'Gagner 1 000 bonbons au total',goal:1000,reward:500,kind:'candies'},
- {id:'candies10k',name:'La chasse aux bonbons',desc:'Gagner 10 000 bonbons au total',goal:10000,reward:2500,kind:'candies'},
- {id:'candies100k',name:'Trick or treat légendaire',desc:'Gagner 100 000 bonbons au total',goal:100000,reward:12000,kind:'candies'},
- {id:'buildings4',name:'Première confiserie',desc:'Acheter 4 bâtiments d’Halloween',goal:4,reward:300,kind:'buildings'},
- {id:'buildings20',name:'Usine hantée',desc:'Acheter 20 bâtiments d’Halloween',goal:20,reward:3000,kind:'buildings'},
+ {id:'candies100',name:'Réserve de friandises',desc:'Gagner des bonbons aujourd’hui',goal:100,reward:100,kind:'dailyCandies'},
+ {id:'candies1k',name:'Sac bien rempli',desc:'Gagner davantage de bonbons aujourd’hui',goal:1000,reward:500,kind:'dailyCandies'},
+ {id:'candies10k',name:'La chasse aux bonbons',desc:'Atteindre un gros quota quotidien',goal:10000,reward:2500,kind:'dailyCandies'},
+ {id:'candies100k',name:'Trick or treat légendaire',desc:'Atteindre le quota quotidien ultime',goal:100000,reward:12000,kind:'dailyCandies'},
+ {id:'buildings4',name:'Première confiserie',desc:'Acheter des bâtiments aujourd’hui',goal:4,reward:300,kind:'dailyBuildings'},
+ {id:'buildings20',name:'Usine hantée',desc:'Acheter beaucoup de bâtiments aujourd’hui',goal:20,reward:3000,kind:'dailyBuildings'},
  {id:'planet3',name:'Explorer les brumes',desc:'Débloquer la planète 3',goal:3,reward:1500,kind:'planet'},
  {id:'planet6',name:'Au cœur des ténèbres',desc:'Débloquer la planète 6',goal:6,reward:10000,kind:'planet'},
  {id:'planet10',name:'Seigneur d’Halloween',desc:'Débloquer les 10 planètes',goal:10,reward:100000,kind:'planet'},
- {id:'boost1',name:'Marché noir magique',desc:'Acheter un maléfice',goal:1,reward:250,kind:'boosts'}
+ {id:'boost1',name:'Marché noir magique',desc:'Acheter un maléfice aujourd’hui',goal:1,reward:250,kind:'dailyBoosts'}
 ];
 function halloweenActive(){return Date.now()<HALLOWEEN_END;}
 function halloweenEnsure(){
  if(!state.halloween||typeof state.halloween!=='object')state.halloween={};
  const h=state.halloween;
  h.candies=Math.max(0,Number(h.candies)||0);
- if(halloweenActive()&&!h.starterGranted){h.candies+=250;h.totalCandiesEarned=(Number(h.totalCandiesEarned)||0)+250;h.starterGranted=true;}
  h.totalCandiesEarned=Math.max(Number(h.candies)||0,Number(h.totalCandiesEarned)||0);
  h.candiesClicked=Math.max(0,Number(h.candiesClicked)||0);
  h.buildingsPurchased=Math.max(0,Number(h.buildingsPurchased)||0);
  h.boostPurchases=Math.max(0,Number(h.boostPurchases)||0);
+ h.dailyKey=typeof h.dailyKey==='string'?h.dailyKey:dateKey();
+ if(h.dailyKey!==dateKey()){h.dailyKey=dateKey();h.claimedMissions=[];h.dailyCandiesStart=Number(h.totalCandiesEarned)||0;h.dailyBuildingsStart=Number(h.buildingsPurchased)||0;h.dailyBoostsStart=Number(h.boostPurchases)||0;}
+ if(h.dailyCandiesStart===undefined)h.dailyCandiesStart=Number(h.totalCandiesEarned)||0;
+ if(h.dailyBuildingsStart===undefined)h.dailyBuildingsStart=Number(h.buildingsPurchased)||0;
+ if(h.dailyBoostsStart===undefined)h.dailyBoostsStart=Number(h.boostPurchases)||0;
  h.claimedMissions=Array.isArray(h.claimedMissions)?h.claimedMissions:[];
+ h.missionLevels=h.missionLevels&&typeof h.missionLevels==='object'?h.missionLevels:{};
  h.selected=!!h.selected;
  h.planet=Math.max(0,Math.min(9,Math.floor(Number(h.planet)||0)));
  h.buildings=h.buildings&&typeof h.buildings==='object'?h.buildings:{};
@@ -123,7 +128,10 @@ function halloweenEnsure(){
 }
 function halloweenPlanetUnlocked(p){if(p<=0)return true;return HALLOWEEN_PLANETS[p-1].buildings.every((_,i)=>(state.halloween?.buildings?.[(p-1)+'-'+i]||0)>=1)}
 function halloweenPlanetProgress(p){return HALLOWEEN_PLANETS[p].buildings.reduce((n,_,i)=>n+((state.halloween?.buildings?.[p+'-'+i]||0)>0?1:0),0)}
-function halloweenMissionValue(m){const h=state.halloween;switch(m.kind){case'candies':return h.totalCandiesEarned||0;case'buildings':return h.buildingsPurchased||0;case'planet':return HALLOWEEN_PLANETS.filter((_,i)=>halloweenPlanetUnlocked(i)).length;case'boosts':return h.boostPurchases||0;default:return 0}}
+function halloweenMissionLevel(m){return Math.max(1,Math.floor(Number(state.halloween?.missionLevels?.[m.id])||1))}
+function halloweenMissionGoal(m){return Math.ceil(m.goal*Math.pow(1.8,halloweenMissionLevel(m)-1))}
+function halloweenMissionReward(m){return Math.ceil(m.reward*Math.pow(1.45,halloweenMissionLevel(m)-1))}
+function halloweenMissionValue(m){const h=state.halloween;switch(m.kind){case'dailyCandies':return Math.max(0,(h.totalCandiesEarned||0)-(h.dailyCandiesStart||0));case'dailyBuildings':return Math.max(0,(h.buildingsPurchased||0)-(h.dailyBuildingsStart||0));case'dailyBoosts':return Math.max(0,(h.boostPurchases||0)-(h.dailyBoostsStart||0));case'planet':return HALLOWEEN_PLANETS.filter((_,i)=>halloweenPlanetUnlocked(i)).length;default:return 0}}
 function halloweenRate(){
  if(!halloweenActive())return 0;
  halloweenEnsure();
@@ -145,7 +153,7 @@ function halloweenBuyBuilding(index){
  if(!halloweenActive())return;
  halloweenEnsure();const p=state.halloween.planet,b=HALLOWEEN_PLANETS[p].buildings[index];if(!halloweenPlanetUnlocked(p)){toast('Planète verrouillée : construis les 4 bâtiments de la planète précédente.');return;}if(!b)return;
  const key=p+'-'+index,level=state.halloween.buildings[key]||0;
- const cost=Math.ceil(b[3]*18*Math.pow(1.72,level));
+ const cost=Math.ceil(b[3]*1200*Math.pow(2.65,level)*Math.pow(3.8,p));
  if(state.halloween.candies<cost){toast('Pas assez de bonbons !');return;}
  state.halloween.candies-=cost;state.halloween.buildings[key]=level+1;state.halloween.buildingsPurchased++;save();render();toast(b[1]+' amélioré !');
 }
@@ -173,13 +181,13 @@ function renderHalloweenColony(){
  if(!halloweenActive()){root.innerHTML='<div class="panel"><b>ÉVÉNEMENT TERMINÉ</b><p class="hint">La galaxie d’Halloween est disponible jusqu’au 1er novembre 2026 inclus.</p><button class="secondary" data-halloween-exit>Retour à la colonie normale</button></div>';return;}
  halloweenEnsure();const h=state.halloween,p=h.planet,planet=HALLOWEEN_PLANETS[p];
  const planets=HALLOWEEN_PLANETS.map((x,i)=>{const unlocked=halloweenPlanetUnlocked(i),built=halloweenPlanetProgress(i);return `<button class="halloween-planet ${i===p?'active':''} ${unlocked?'':'locked'}" data-halloween-planet="${i}" ${unlocked?'':'disabled'}><span>${unlocked?x.icon:'🔒'}</span><b>${String(i+1).padStart(2,'0')} · ${x.name}</b><small>${unlocked?`Bâtiments ${built}/4 · ×${x.scale}`:'Construis les 4 bâtiments précédents'}</small></button>`}).join('');
- const buildings=planet.buildings.map((b,i)=>{const level=h.buildings[p+'-'+i]||0,cost=Math.ceil(b[3]*18*Math.pow(1.72,level)),rate=b[3]*planet.scale*Math.pow(1.72,level);return `<article class="halloween-building"><span class="hb-icon">${b[0]}</span><div class="hb-info"><b>${b[1]}</b><small>Niveau ${level} · +${fmt(rate)} bonbons/s</small><em>Coût : 🍬 ${fmt(cost)}</em></div><button data-hallow-buy="${i}" ${!halloweenPlanetUnlocked(p)||h.candies<cost?'disabled':''}>AMÉLIORER</button></article>`}).join('');
+ const buildings=planet.buildings.map((b,i)=>{const level=h.buildings[p+'-'+i]||0,cost=Math.ceil(b[3]*1200*Math.pow(2.65,level)*Math.pow(3.8,p)),rate=b[3]*planet.scale*Math.pow(1.72,level);return `<article class="halloween-building"><span class="hb-icon">${b[0]}</span><div class="hb-info"><b>${b[1]}</b><small>Niveau ${level} · +${fmt(rate)} bonbons/s</small><em>Coût : 🍬 ${fmt(cost)}</em></div><button data-hallow-buy="${i}" ${!halloweenPlanetUnlocked(p)||h.candies<cost?'disabled':''}>AMÉLIORER</button></article>`}).join('');
  const boosts=Object.entries(HALLOWEEN_BOOSTS).map(([id,b])=>{const left=Math.max(0,Number(h.boosts[id]?.until||0)-Date.now());return `<article class="halloween-boost"><span>${b.icon}</span><div><b>${b.name}</b><small>${b.desc}</small>${left?`<em>Actif · ${Math.ceil(left/60000)} min restantes</em>`:''}</div><button data-hallow-boost="${id}" ${h.candies<b.cost?'disabled':''}>🍬 ${fmt(b.cost)}</button></article>`}).join('');
 
  root.innerHTML=`<div class="halloween-colony-banner"><div><small>ÉVÉNEMENT TEMPORAIRE · JUSQU’AU 1ER NOVEMBRE</small><h3>🎃 Colonie d’Halloween</h3><p>Construis les 4 bâtiments de chaque planète pour débloquer la suivante. Les bonbons servent uniquement à l’événement et aux maléfices.</p></div><button class="secondary" data-halloween-exit>RETOUR AUX GALAXIES</button></div><div class="halloween-event-head"><div><small>PLANÈTE ACTIVE</small><h3>${planet.icon} ${planet.name}</h3><p>${planet.desc}</p></div><div class="halloween-candy-wallet"><span>🍬</span><b>${fmt(h.candies)}</b><small>+${fmt(halloweenRate())}/s</small></div></div><div class="halloween-planet-grid">${planets}</div><div class="halloween-layout"><section class="halloween-panel"><div class="halloween-section-title"><span>${planet.icon}</span><div><h3>Bâtiments hantés</h3><p>Chaque type de bâtiment doit être construit une fois pour débloquer la planète suivante.</p></div></div><div class="halloween-building-list">${buildings}</div><details id="halloween-boost-shop" class="halloween-accordion" ${openHalloweenAccordions.has('halloween-boost-shop')?'open':''}><summary>🧪 Boutique des maléfices <span>20 boosts · prix croissants</span><b>⌄</b></summary><div class="halloween-accordion-content">${boosts}</div></details></section></div>`;
 }
 function halloweenClickCandy(){if(!halloweenActive()||!state.halloween?.selected)return;halloweenEnsure();state.halloween.candies+=1;state.halloween.totalCandiesEarned+=1;state.halloween.candiesClicked++;save();render();toast('🍬 +1 bonbon !');}
-function claimHalloweenMission(id){halloweenEnsure();const m=HALLOWEEN_MISSIONS.find(x=>x.id===id);if(!m||state.halloween.claimedMissions.includes(id)||halloweenMissionValue(m)<m.goal)return;state.halloween.claimedMissions.push(id);state.halloween.candies+=m.reward;state.halloween.totalCandiesEarned+=m.reward;save();render();toast('🎃 Mission terminée : +'+fmt(m.reward)+' bonbons');}
+function claimHalloweenMission(id){halloweenEnsure();const m=HALLOWEEN_MISSIONS.find(x=>x.id===id),h=state.halloween;if(!m||h.claimedMissions.includes(id)||halloweenMissionValue(m)<halloweenMissionGoal(m))return;const reward=halloweenMissionReward(m),repeatable=m.kind.startsWith('daily');h.claimedMissions.push(id);h.candies+=reward;h.totalCandiesEarned+=reward;if(repeatable)h.missionLevels[id]=halloweenMissionLevel(m)+1;save();render();toast('🎃 Mission terminée : +'+fmt(reward)+' bonbons');}
 function halloweenTick(){
  if(!halloweenActive())return;
  halloweenEnsure();const gain=halloweenRate()/4;
@@ -581,7 +589,7 @@ function renderMissions(){
  ensureDaily();ensureWeekly();ensureMissionState();
  const box=document.getElementById('missionList');if(!box)return;
  const tabs=[['daily','📅','QUOTIDIEN'],['quests','🎯','QUÊTES'],['campaign','📜','CAMPAGNE'],['weekly','🗓️','HEBDOMADAIRE'],['achievements','🏆','SUCCÈS']];
- box.innerHTML=tabs.map(([tab,icon,label],i)=>{const id='mission-group-'+tab,ready=missionSectionReady(tab);return `<details id="${id}" class="mission-group" ${openMissionAccordions.has(id)?'open':''}><summary><span class="mission-group-icon">${icon}</span><b>${label}</b><small>${tab==='daily'?dailySet().filter((d,j)=>!state.daily.claimed.includes(j)).length+' disponibles':tab==='quests'?QUESTS.length+' progressions':tab==='campaign'?CAMPAIGN.length+' objectifs':tab==='weekly'?WEEKLY.length+' objectifs':ACHIEVEMENTS.length+' succès'}</small>${ready?'<i class="quest-ready-dot" aria-label="Récompense disponible"></i>':''}<span class="accordion-chevron">⌄</span></summary><div class="mission-group-content">${renderMissionSection(tab)}</div></details>`}).join('') + (halloweenActive()?`<details id="mission-group-halloween" class="mission-group halloween-mission-group" ${openMissionAccordions.has('mission-group-halloween')?'open':''}><summary><span class="mission-group-icon">🎃</span><b>MISSIONS D’HALLOWEEN</b><small>${HALLOWEEN_MISSIONS.filter(m=>state.halloween.claimedMissions.includes(m.id)).length}/${HALLOWEEN_MISSIONS.length} terminées</small><span class="accordion-chevron">⌄</span></summary><div class="mission-group-content">${HALLOWEEN_MISSIONS.map(m=>{const value=halloweenMissionValue(m),claimed=state.halloween.claimedMissions.includes(m.id),done=value>=m.goal,pct=Math.min(100,value/Math.max(1,m.goal)*100);return `<article class="mission halloween-mission ${done&&!claimed?'mission-ready':''}"><div class="mission-head"><strong>${claimed?'✓':done?'●':'○'} ${m.name}</strong><b>+🍬 ${fmt(m.reward)}</b></div><small>${m.desc} · ${fmt(value)} / ${fmt(m.goal)}</small><div class="bar"><i style="width:${pct}%"></i></div><button class="${done&&!claimed?'primary':'secondary'}" data-halloween-mission="${m.id}" ${done&&!claimed?'':'disabled'}>${claimed?'RÉCLAMÉ':done?'RÉCLAMER':'EN COURS'}</button></article>`}).join('')}</div></details>`:'');
+ box.innerHTML=tabs.map(([tab,icon,label],i)=>{const id='mission-group-'+tab,ready=missionSectionReady(tab);return `<details id="${id}" class="mission-group" ${openMissionAccordions.has(id)?'open':''}><summary><span class="mission-group-icon">${icon}</span><b>${label}</b><small>${tab==='daily'?dailySet().filter((d,j)=>!state.daily.claimed.includes(j)).length+' disponibles':tab==='quests'?QUESTS.length+' progressions':tab==='campaign'?CAMPAIGN.length+' objectifs':tab==='weekly'?WEEKLY.length+' objectifs':ACHIEVEMENTS.length+' succès'}</small>${ready?'<i class="quest-ready-dot" aria-label="Récompense disponible"></i>':''}<span class="accordion-chevron">⌄</span></summary><div class="mission-group-content">${renderMissionSection(tab)}</div></details>`}).join('') + (halloweenActive()?`<details id="mission-group-halloween" class="mission-group halloween-mission-group" ${openMissionAccordions.has('mission-group-halloween')?'open':''}><summary><span class="mission-group-icon">🎃</span><b>MISSIONS D’HALLOWEEN</b><small>${HALLOWEEN_MISSIONS.filter(m=>state.halloween.claimedMissions.includes(m.id)).length}/${HALLOWEEN_MISSIONS.length} terminées</small>${HALLOWEEN_MISSIONS.some(m=>!state.halloween.claimedMissions.includes(m.id)&&halloweenMissionValue(m)>=halloweenMissionGoal(m))?'<i class="quest-ready-dot" aria-label="Mission Halloween prête"></i>':''}<span class="accordion-chevron">⌄</span></summary><div class="mission-group-content">${HALLOWEEN_MISSIONS.map(m=>{const value=halloweenMissionValue(m),claimed=state.halloween.claimedMissions.includes(m.id),goal=halloweenMissionGoal(m),reward=halloweenMissionReward(m),lv=halloweenMissionLevel(m),done=value>=goal,pct=Math.min(100,value/Math.max(1,goal)*100);return `<article class="mission halloween-mission ${done&&!claimed?'mission-ready':''}"><div class="mission-head"><strong>${done&&!claimed?'<i class="quest-ready-dot"></i> ':''}${claimed?'✓':done?'●':'○'} ${m.name} <small>NIVEAU ${lv}</small></strong><b>+🍬 ${fmt(reward)}</b></div><small>${m.desc} · ${fmt(value)} / ${fmt(goal)}</small><div class="bar"><i style="width:${pct}%"></i></div><button class="${done&&!claimed?'primary':'secondary'}" data-halloween-mission="${m.id}" ${done&&!claimed?'':'disabled'}>${claimed?'TERMINÉ':done?'RÉCLAMER NIVEAU '+lv:'EN COURS · NIVEAU '+lv}</button></article>`}).join('')}</div></details>`:'');
 }
 function missionHTML(id,title,type,need,reward,claimed,value){const done=value>=need;return `<article class="mission ${done&&!claimed?'mission-ready':''}"><div class="mission-head"><strong>${done&&!claimed?'<i class="quest-ready-dot"></i> ':''}${claimed?'✓':done?'●':'○'} ${title}</strong><b>+${fmt(reward)}</b></div><small>${fmt(value)} / ${fmt(need)}</small><div class="bar"><i style="width:${Math.min(100,value/need*100)}%"></i></div><button class="${done&&!claimed?'primary':'secondary'}" data-claim="${id}" data-claim-type="${id[0]==='d'?'daily':id.startsWith('week')?'weekly':'campaign'}" ${done&&!claimed?'':'disabled'}>${claimed?'RÉCLAMÉ':done?'RÉCLAMER':'EN COURS'}</button></article>`}
 function renderDailyPreview(){const box=document.getElementById('dailyPreview');if(!box)return;ensureDaily();const ds=dailySet();box.innerHTML=ds.map((d,i)=>`<div class="daily-row"><span>${state.daily.claimed.includes(i)?'✓':'○'} ${d[1]}</span><b>+${fmt(DAILY_REWARDS[i])}</b></div>`).join('')}
