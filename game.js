@@ -3,7 +3,7 @@ const SUPABASE_KEY='sb_publishable_moYDSTJplgl9XPCiKR96bQ_CPt3MJ7z';
 const sb=window.supabase?.createClient?.(SUPABASE_URL,SUPABASE_KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}})||null;
 
 const KEY='space-mining-v2-test';
-const CLOUD_SYNC_MS=55000;
+const CLOUD_SYNC_MS=1000;
 const CLOUD_TABLE='player_state';
 let cloudBusy=false,cloudRestoreBusy=false,lastCloudSync=0,lastLeaderboard=0,leaderboardBusy=false;
 let cloudDirty=false,cloudRetryAt=0,cloudRestoreDone=false,cloudSyncFailures=0;
@@ -109,12 +109,6 @@ function halloweenEnsure(){
  const h=state.halloween;
  h.candies=Math.max(0,Number(h.candies)||0);
  h.totalCandiesEarned=Math.max(Number(h.candies)||0,Number(h.totalCandiesEarned)||0);
- // Une seule aide de démarrage : assez pour le premier bâtiment (coût initial 14 400).
- if(!h.startingCandyGrantGiven && h.candies===0 && (Number(h.buildingsPurchased)||0)===0 && Object.values(h.buildings||{}).every(v=>Number(v||0)===0) && (Number(h.totalCandiesEarned)||0)===0){
-  h.candies=15000;
-  h.totalCandiesEarned=15000;
-  h.startingCandyGrantGiven=true;
- }else if(h.startingCandyGrantGiven===undefined){h.startingCandyGrantGiven=true;}
  h.candiesClicked=Math.max(0,Number(h.candiesClicked)||0);
  h.buildingsPurchased=Math.max(0,Number(h.buildingsPurchased)||0);
  h.boostPurchases=Math.max(0,Number(h.boostPurchases)||0);
@@ -475,24 +469,7 @@ z.lastAt=Number(z.lastAt)||Date.now();
  return z;
 }
 function load(){try{let raw=null;for(const k of [KEY,...OLD_KEYS]){const x=localStorage.getItem(k);if(x){raw=JSON.parse(x);break}}return migrate(raw)}catch{return fresh()}}
-let cloudSaveDebounceTimer=null;
-function save(markCloud=true){
- if(markCloud){
-  state.localUpdatedAt=Date.now();
-  state.syncRevision=(Number(state.syncRevision)||0)+1;
-  if(state.account){
-   cloudDirty=true;
-   // Synchronise rapidement après une action, sans envoyer une requête à chaque tick.
-   if(cloudSaveDebounceTimer)clearTimeout(cloudSaveDebounceTimer);
-   cloudSaveDebounceTimer=setTimeout(()=>{
-    cloudSaveDebounceTimer=null;
-    if(state.account&&cloudDirty)syncCloud(true);
-   },1200);
-  }
- }
- try{localStorage.setItem(KEY,JSON.stringify(state))}
- catch(e){console.warn('Local save failed',e);cloudMessage='Le stockage local est indisponible.'}
-}
+function save(markCloud=true){if(markCloud){state.localUpdatedAt=Date.now();state.syncRevision=(Number(state.syncRevision)||0)+1;if(state.account)cloudDirty=true}try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){console.warn('Local save failed',e);cloudMessage='Le stockage local est indisponible.'} }
 function fmt(n){if(!Number.isFinite(n))return '∞';n=Math.max(0,n);if(n<1000)return Math.floor(n).toLocaleString('fr-FR');const units=['K','M','Md','Bn','T','Qa','Qi','Sx','Sp','Oc','No','Dc','Ud','Dd','Td','Qad','Qid'];const i=Math.floor(Math.log10(n)/3);return (n/10**(i*3)).toFixed(i>4?2:1)+' '+(units[i-1]||'e'+i*3)}
 function dateKey(){return new Date().toISOString().slice(0,10)}
 function weekKey(){const d=new Date();const day=d.getDay()||7;d.setHours(0,0,0,0);d.setDate(d.getDate()-day+1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
@@ -710,14 +687,7 @@ async function syncCloud(force=false){
   cloudDirty=(Number(state.syncRevision)||0)!==uploadRevision;save(false);setCloudMessage(cloudDirty?'Nouveaux changements en attente de la prochaine sauvegarde.':'Sauvegarde cloud confirmée · '+new Date(lastCloudSync).toLocaleTimeString('fr-FR'));
   return true
  }catch(error){cloudSyncFailures++;cloudRetryAt=Date.now()+Math.min(90000,4000*Math.pow(2,Math.min(4,cloudSyncFailures-1)));const message=await cloudErrorMessage(error);console.warn('Cloud sync',error);setCloudMessage(message,true);if(force)toast('☁️ '+message);return false}
- finally{
-  cloudBusy=false;
-  renderAccount();
-  if(state.account&&cloudDirty){
-   if(cloudSaveDebounceTimer)clearTimeout(cloudSaveDebounceTimer);
-   cloudSaveDebounceTimer=setTimeout(()=>{cloudSaveDebounceTimer=null;if(state.account&&cloudDirty)syncCloud(true)},1200);
-  }
- }
+ finally{cloudBusy=false;renderAccount()}
 }
 async function restoreCloud(allowLocalMerge=true){
  if(!sb||!state.account?.userId||cloudRestoreBusy)return false;if(typeof navigator!=='undefined'&&navigator.onLine===false){cloudDirty=true;setCloudMessage('Hors ligne · ta progression reste enregistrée sur cet appareil.');return false}cloudRestoreBusy=true;const account={...state.account};
@@ -857,7 +827,7 @@ document.addEventListener('click', e => {
 
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-halloween-enter')){if(!halloweenActive())return;state.halloween.selected=true;state.halloween.planet=Math.max(0,Math.min(9,Number(state.halloween.planet)||0));save();nav('buildings');return;}if(b.hasAttribute('data-halloween-exit')){state.halloween.selected=false;save();nav('sectors');return;}if(b.dataset.halloweenPlanet!==undefined){const p=Number(b.dataset.halloweenPlanet);if(!halloweenPlanetUnlocked(p)){toast('Planète verrouillée : achète les 4 bâtiments de la planète précédente.');return;}state.halloween.planet=Math.max(0,Math.min(9,p));save();render();return;}if(b.hasAttribute('data-halloween-mission')){claimHalloweenMission(b.dataset.halloweenMission);return;}if(b.id==='halloweenCandyBtn'){halloweenClickCandy();return;}if(b.dataset.hallowBuy!==undefined){halloweenBuyBuilding(Number(b.dataset.hallowBuy));return;}if(b.dataset.hallowBoost){halloweenBuyBoost(b.dataset.hallowBoost);return;}if(b.dataset.adminAction){runAdminAction(b.dataset.adminAction);return;}if(b.id==='reminderLater'){dismissAccountReminder();return}if(b.id==='reminderCreateAccount'||b.id==='reminderLoginAccount'){closeAccountReminder();nav('account');document.getElementById('emailInput')?.focus({preventScroll:true});return}if(b.dataset.nav){nav(b.dataset.nav);return}if(b.dataset.ascUpgrade){buyAscensionUpgrade(b.dataset.ascUpgrade);return}if(b.dataset.galaxy!==undefined){state.halloween.selected=false;const g=Number(b.dataset.galaxy);if(g<state.galaxiesUnlocked){selectedWorld=g*32;state.activeWorld=selectedWorld;localStorage.setItem('sm-v2-world',selectedWorld);save();render()}return}if(b.id==='mineBtn'){mine();return}if(b.dataset.buy!==undefined){buyBuilding(Number(b.dataset.buy));return}if(b.dataset.tech){buyTech(b.dataset.tech);return}if(b.dataset.quest){claimQuest(b.dataset.quest,b.dataset.questLevel);return}if(b.dataset.claim){claim(b.dataset.claim,b.dataset.claimType);return}if(b.dataset.achievement){claimAchievement(b.dataset.achievement);return}if(b.dataset.mtab){missionTab=b.dataset.mtab;document.querySelectorAll('[data-mtab]').forEach(x=>x.classList.toggle('active',x===b));renderMissions();return}if(b.id==='prestigeBtn'){prestige();return}if(b.id==='createAccount'){createAccount();return}if(b.id==='loginAccount'){loginAccount();return}if(b.id==='logoutAccount'){logout();return}if(b.id==='recoverPassword'){recoverPassword();return}if(b.id==='saveNewPassword'){saveNewPassword();return}if(b.id==='cancelPasswordRecovery'){passwordRecoveryMode=false;renderAccount();return}if(b.id==='forceSync'){syncCloud(true).then(ok=>{if(ok)toast('☁️ Sauvegarde synchronisée')});return}});
 setInterval(()=>{ensureDaily();ensureWeekly();ensureQuests();halloweenTick();checkEvent();checkAchievements();if(state.clickStreak&&Date.now()-state.lastClickAt>2200){state.clickStreak=0;}const passiveGain=autoRate()/4;if(passiveGain>0){earn(passiveGain);save(true)}else save(false);if(document.visibilityState==='visible')render();},250);
-setInterval(()=>{if(state.account)syncCloud(false)},60000);
+setInterval(()=>{if(state.account)syncCloud(false)},1000);
 if(sb){sb.auth.onAuthStateChange((_event,session)=>{adminVerified=String(session?.user?.email||'').toLowerCase()===ADMIN_EMAIL&&String(session?.user?.id||'')===String(state.account?.userId||'');renderAccount()});verifyAdminSession().then(()=>renderAccount())}
 window.addEventListener('online',()=>{if(state.account){cloudLastError='';cloudRetryAt=0;setCloudMessage('Connexion rétablie · synchronisation en cours.');syncCloud(true)}});
 window.addEventListener('offline',()=>{if(state.account)setCloudMessage('Hors ligne · les changements restent en attente.')});
