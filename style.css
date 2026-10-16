@@ -194,14 +194,72 @@ body.halloween-selected .hero-space:after{background:linear-gradient(115deg,tran
 .halloween-accordion{margin-top:12px;overflow:hidden;border:1px solid rgba(255,140,53,.25);border-radius:12px;background:linear-gradient(145deg,rgba(36,19,27,.9),rgba(12,11,20,.98))}.halloween-accordion>summary{display:flex;align-items:center;gap:10px;padding:14px;min-height:52px;cursor:pointer;list-style:none;color:#ffca91;font-size:12px;font-weight:800}.halloween-accordion>summary::-webkit-details-marker{display:none}.halloween-accordion>summary span{margin-left:auto;color:#b7a4b6;font-size:10px;font-weight:500}.halloween-accordion>summary b{font-size:17px;transition:transform .2s}.halloween-accordion[open]>summary b{transform:rotate(180deg)}.halloween-accordion-content{display:grid;gap:8px;padding:0 10px 10px;border-top:1px solid rgba(255,140,53,.13)}.halloween-accordion-content .halloween-boost,.halloween-accordion-content .halloween-mission{margin-top:8px}.halloween-mission-group>summary{background:linear-gradient(90deg,rgba(255,113,35,.08),transparent)}.halloween-mission .bar i{background:linear-gradient(90deg,#ff6b27,#ffc66d)}.halloween-boost button{min-width:80px}.halloween-layout{grid-template-columns:1fr}
 @media(max-width:760px){.halloween-candy-click{left:calc(50% + 79px);bottom:25px;width:88px;height:88px}.halloween-candy-click span{font-size:25px}.halloween-candy-click b{font-size:8px}.halloween-candy-click small{font-size:8px}.halloween-colony-banner{align-items:flex-start;flex-direction:column;padding:14px}.halloween-colony-banner h3{font-size:18px}.halloween-accordion>summary{gap:7px;padding:12px;font-size:10px}.halloween-accordion>summary span{font-size:8px}}
 
+/* Mobile layout fix: keep sync text visible and give the status chips enough width. */
+@media (max-width: 700px) {
+  .account-chip {
+    min-width: 158px;
+    width: max-content;
+    max-width: 46vw;
+    grid-template-columns: 9px minmax(0, 1fr);
+    padding: 9px 10px;
+  }
+  .account-chip b,
+  .account-chip small {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    line-height: 1.35;
+  }
+  .sync-card {
+    width: 100%;
+    box-sizing: border-box;
+    align-items: flex-start;
+  }
+  .sync-card > div {
+    display: block;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow-wrap: anywhere;
+  }
+  .sync-card strong,
+  .sync-card p,
+  .sync-card small {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
 
-/* Header full-width: étend le fond sur tout l’écran sans déplacer les contrôles sur desktop. */
-@media (min-width: 761px){
-  .topbar{
-    width:100vw;
-    margin-left:calc(50% - 50vw);
-    padding-left:max(26px,calc((100vw - 1288px)/2));
-    padding-right:max(26px,calc((100vw - 1288px)/2));
-    box-sizing:border-box;
+
+/* Layout correction: widen the account/status chip and extend the top bar edge-to-edge on mobile.
+   Display text and sync behavior are intentionally preserved. */
+@media (max-width: 760px) {
+  #app > .topbar {
+    width: calc(100% + 20px);
+    margin-left: -10px;
+    box-sizing: border-box;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .topbar .account-chip {
+    min-width: 138px;
+    width: max-content;
+    max-width: 48vw;
+    box-sizing: border-box;
+    grid-template-columns: 9px minmax(0, 1fr);
+    overflow: visible;
+  }
+  .topbar .account-chip b,
+  .topbar .account-chip small {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    line-height: 1.35;
+  }
+}
+@media (max-width: 370px) {
+  .topbar .account-chip {
+    min-width: 128px;
+    max-width: 48vw;
+    padding: 7px 8px;
   }
 }
