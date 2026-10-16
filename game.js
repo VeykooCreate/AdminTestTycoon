@@ -109,6 +109,12 @@ function halloweenEnsure(){
  const h=state.halloween;
  h.candies=Math.max(0,Number(h.candies)||0);
  h.totalCandiesEarned=Math.max(Number(h.candies)||0,Number(h.totalCandiesEarned)||0);
+ // Une seule aide de démarrage : assez pour le premier bâtiment (coût initial 14 400).
+ if(!h.startingCandyGrantGiven && h.candies===0 && (Number(h.buildingsPurchased)||0)===0 && Object.values(h.buildings||{}).every(v=>Number(v||0)===0) && (Number(h.totalCandiesEarned)||0)===0){
+  h.candies=15000;
+  h.totalCandiesEarned=15000;
+  h.startingCandyGrantGiven=true;
+ }else if(h.startingCandyGrantGiven===undefined){h.startingCandyGrantGiven=true;}
  h.candiesClicked=Math.max(0,Number(h.candiesClicked)||0);
  h.buildingsPurchased=Math.max(0,Number(h.buildingsPurchased)||0);
  h.boostPurchases=Math.max(0,Number(h.boostPurchases)||0);
@@ -469,7 +475,24 @@ z.lastAt=Number(z.lastAt)||Date.now();
  return z;
 }
 function load(){try{let raw=null;for(const k of [KEY,...OLD_KEYS]){const x=localStorage.getItem(k);if(x){raw=JSON.parse(x);break}}return migrate(raw)}catch{return fresh()}}
-function save(markCloud=true){if(markCloud){state.localUpdatedAt=Date.now();state.syncRevision=(Number(state.syncRevision)||0)+1;if(state.account)cloudDirty=true}try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){console.warn('Local save failed',e);cloudMessage='Le stockage local est indisponible.'} }
+let cloudSaveDebounceTimer=null;
+function save(markCloud=true){
+ if(markCloud){
+  state.localUpdatedAt=Date.now();
+  state.syncRevision=(Number(state.syncRevision)||0)+1;
+  if(state.account){
+   cloudDirty=true;
+   // Synchronise rapidement après une action, sans envoyer une requête à chaque tick.
+   if(cloudSaveDebounceTimer)clearTimeout(cloudSaveDebounceTimer);
+   cloudSaveDebounceTimer=setTimeout(()=>{
+    cloudSaveDebounceTimer=null;
+    if(state.account&&cloudDirty)syncCloud(true);
+   },1200);
+  }
+ }
+ try{localStorage.setItem(KEY,JSON.stringify(state))}
+ catch(e){console.warn('Local save failed',e);cloudMessage='Le stockage local est indisponible.'}
+}
 function fmt(n){if(!Number.isFinite(n))return '∞';n=Math.max(0,n);if(n<1000)return Math.floor(n).toLocaleString('fr-FR');const units=['K','M','Md','Bn','T','Qa','Qi','Sx','Sp','Oc','No','Dc','Ud','Dd','Td','Qad','Qid'];const i=Math.floor(Math.log10(n)/3);return (n/10**(i*3)).toFixed(i>4?2:1)+' '+(units[i-1]||'e'+i*3)}
 function dateKey(){return new Date().toISOString().slice(0,10)}
 function weekKey(){const d=new Date();const day=d.getDay()||7;d.setHours(0,0,0,0);d.setDate(d.getDate()-day+1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
@@ -687,7 +710,14 @@ async function syncCloud(force=false){
   cloudDirty=(Number(state.syncRevision)||0)!==uploadRevision;save(false);setCloudMessage(cloudDirty?'Nouveaux changements en attente de la prochaine sauvegarde.':'Sauvegarde cloud confirmée · '+new Date(lastCloudSync).toLocaleTimeString('fr-FR'));
   return true
  }catch(error){cloudSyncFailures++;cloudRetryAt=Date.now()+Math.min(90000,4000*Math.pow(2,Math.min(4,cloudSyncFailures-1)));const message=await cloudErrorMessage(error);console.warn('Cloud sync',error);setCloudMessage(message,true);if(force)toast('☁️ '+message);return false}
- finally{cloudBusy=false;renderAccount()}
+ finally{
+  cloudBusy=false;
+  renderAccount();
+  if(state.account&&cloudDirty){
+   if(cloudSaveDebounceTimer)clearTimeout(cloudSaveDebounceTimer);
+   cloudSaveDebounceTimer=setTimeout(()=>{cloudSaveDebounceTimer=null;if(state.account&&cloudDirty)syncCloud(true)},1200);
+  }
+ }
 }
 async function restoreCloud(allowLocalMerge=true){
  if(!sb||!state.account?.userId||cloudRestoreBusy)return false;if(typeof navigator!=='undefined'&&navigator.onLine===false){cloudDirty=true;setCloudMessage('Hors ligne · ta progression reste enregistrée sur cet appareil.');return false}cloudRestoreBusy=true;const account={...state.account};
